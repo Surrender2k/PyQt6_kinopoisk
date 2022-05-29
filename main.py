@@ -1,4 +1,5 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QDialog, QMainWindow, QTableWidgetItem, QMessageBox
+from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QTableWidgetItem, QMessageBox
+from PyQt6.QtGui import QAction
 from main_window import Ui_MainWindow
 from login_dialog import Ui_LoginDialog
 from find_dialog import Ui_FindDialog
@@ -16,7 +17,10 @@ class FindDialog(QDialog, Ui_FindDialog):
         self.findButton.clicked.connect(self.findButtonClicked)
 
     def findButtonClicked(self):
-        self.close()
+        if self.findEdit.text() != '':
+            self.close()
+        else:
+            QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
 
 # pyuic6 -x login_dialog.ui -o login_dialog.py
@@ -28,7 +32,13 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         self.logButton.clicked.connect(self.logButtonClicked)
 
     def logButtonClicked(self):
-        self.close()
+        if self.check_fields():
+            self.close()
+        else:
+            QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
+
+    def check_fields(self):
+        return not (self.loginEdit.text() == '' or self.passEdit.text() == '')
 
 
 # pyuic6 -x add_dialog.ui -o add_dialog.py
@@ -46,7 +56,8 @@ class AddDialog(QDialog, Ui_AddDialog):
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
     def check_fields(self):
-            return not(self.nameEdit.text() == '' or self.yearEdit.text() or self.countryEdit.text() == '' or self.genreEdit.text() or self.directorEdit.text() == '' or self.ratingEdit.text()=='')
+        return not (self.nameEdit.text() == '' or self.yearEdit.text() or self.countryEdit.text() == ''
+                    or self.genreEdit.text() or self.directorEdit.text() == '' or self.ratingEdit.text() == '')
 
 
 # TODO
@@ -67,6 +78,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget.setColumnWidth(5, 49)  # rating
         self.addButton.hide()
         self.delButton.hide()
+        self.connection = None
+        self.connectDB()
 
         self.loadButton.clicked.connect(self.loadDB)  # Загрузить
         self.loginButton.clicked.connect(self.loginButtonClicked)  # Войти
@@ -74,12 +87,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
-        log_d.exec()
+        res = log_d.exec()
         login = log_d.loginEdit.text()
         password = log_d.passEdit.text()
         admin = False
         if login != '' != password:
-            # sql query
+            # sql query and check if admin
             # TODO
             if admin:
                 self.addButton.show()
@@ -88,37 +101,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def loadDB(self):
         # TODO
         try:
-            connection = pymysql.connect(
-                host='localhost',
-                port=3306,
-                user='root',
-                password='your_password',
-                database='pyqt6',
-                cursorclass=pymysql.cursors.DictCursor
-            )
-            print('success\n# * 20')
-
-            try:
-                with connection.cursor() as cur:
-                    get_data_query = 'SELECT * FROM pyqt6.films;'
-                    i = 0
-                    for row in cur.execute(get_data_query):
-                        self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # name
-                        self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # year
-                        self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # country
-                        self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # genre
-                        self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # director
-                        self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # rating
-                        i += 1
-            finally:
-                connection.close()
+            with self.connection.cursor() as cur:
+                get_data_query = 'SELECT * FROM pyqt6.films;'
+                i = 0
+                for row in cur.execute(get_data_query):
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # name
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # year
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # country
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # genre
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # director
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # rating
+                    i += 1
         except Exception as ex:
-            print('Connection failed')
+            QMessageBox.information(self, 'Ошибка', 'Подключение к базе данных не удалось')
             print(ex)
 
     def findButtonClicked(self):
         find_d = FindDialog(self)
         find_d.exec()
+
+    def connectDB(self):
+        try:
+            self.connection = pymysql.connect(
+                host='localhost',
+                port=3306,
+                user='root',
+                password='****',
+                database='pyqt6',
+                cursorclass=pymysql.cursors.DictCursor
+            )
+        except Exception as ex:
+            print('Connection failed')
+            print(ex)
+
+    def closeDB(self):
+        if self.connection != None:
+            self.connection.close()
+
+    def closeEvent(self, event):
+        self.closeDB()
+        sys.exit()
 
 
 if __name__ == "__main__":
