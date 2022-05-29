@@ -15,8 +15,10 @@ class Ui_MainWindow(object):
         MainWindow.resize(1000, 600)
         MainWindow.setMinimumSize(QtCore.QSize(1000, 600))
         MainWindow.setMaximumSize(QtCore.QSize(1000, 600))
+        MainWindow.setStyleSheet("")
         self.tableWidget = QtWidgets.QTableWidget(MainWindow)
         self.tableWidget.setGeometry(QtCore.QRect(200, 0, 800, 600))
+        self.tableWidget.setStyleSheet("background-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:1, stop:0 rgba(90, 0, 255, 255), stop:1 rgba(255, 75, 75, 255));")
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(6)
@@ -33,30 +35,97 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(5, item)
-        self.loadButton = QtWidgets.QPushButton(MainWindow)
-        self.loadButton.setGeometry(QtCore.QRect(30, 70, 141, 51))
+        self.widget = QtWidgets.QWidget(MainWindow)
+        self.widget.setGeometry(QtCore.QRect(0, 0, 200, 600))
+        self.widget.setStyleSheet("QWidget#widget{\n"
+"background-color: qradialgradient(spread:repeat, cx:1, cy:1, radius:0.386, fx:0.885773, fy:0.893, stop:0 rgba(255, 0, 0, 255), stop:1 rgba(0, 7, 255, 255));\n"
+"}\n"
+"QPushButton{\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
+"border: 2px solid #85efff;\n"
+"border-radius: 15px;    \n"
+"font-family: roboto;\n"
+"color:rgb(255, 255, 255);\n"
+"font-size: 16px;\n"
+"\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));\n"
+"    border: 2px solid #90ff94;\n"
+"}")
+        self.widget.setObjectName("widget")
+        self.loadButton = QtWidgets.QPushButton(self.widget)
+        self.loadButton.setGeometry(QtCore.QRect(30, 80, 141, 51))
+        self.loadButton.setStyleSheet("")
         self.loadButton.setObjectName("loadButton")
-        self.loginButton = QtWidgets.QPushButton(MainWindow)
-        self.loginButton.setGeometry(QtCore.QRect(30, 170, 141, 51))
-        self.loginButton.setObjectName("loginButton")
-        self.findButton = QtWidgets.QPushButton(MainWindow)
-        self.findButton.setGeometry(QtCore.QRect(30, 270, 141, 51))
-        self.findButton.setObjectName("findButton")
-        self.addButton = QtWidgets.QPushButton(MainWindow)
-        self.addButton.setGeometry(QtCore.QRect(30, 370, 141, 51))
-        self.addButton.setObjectName("addButton")
-        self.delButton = QtWidgets.QPushButton(MainWindow)
-        self.delButton.setGeometry(QtCore.QRect(30, 470, 141, 51))
-        self.delButton.setObjectName("delButton")
-        self.subButton = QtWidgets.QPushButton(MainWindow)
-        self.subButton.setGeometry(QtCore.QRect(30, 370, 141, 51))
-        self.subButton.setObjectName("subButton")
-        self.outButton = QtWidgets.QPushButton(MainWindow)
-        self.outButton.setGeometry(QtCore.QRect(30, 170, 141, 51))
+        self.outButton = QtWidgets.QPushButton(self.widget)
+        self.outButton.setGeometry(QtCore.QRect(30, 180, 141, 51))
+        self.outButton.setStyleSheet("QPushButton{\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
+"border: 2px solid #85efff;\n"
+"border-radius: 15px;    \n"
+"font-family: roboto;\n"
+"color:rgb(255, 255, 255);\n"
+"font-size: 16px;\n"
+"\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));\n"
+"    border: 2px solid #90ff94;\n"
+"}")
         self.outButton.setObjectName("outButton")
-        self.likeButton = QtWidgets.QPushButton(MainWindow)
-        self.likeButton.setGeometry(QtCore.QRect(30, 470, 141, 51))
+        self.loginButton = QtWidgets.QPushButton(self.widget)
+        self.loginButton.setGeometry(QtCore.QRect(30, 180, 141, 51))
+        self.loginButton.setStyleSheet("")
+        self.loginButton.setObjectName("loginButton")
+        self.findButton = QtWidgets.QPushButton(self.widget)
+        self.findButton.setGeometry(QtCore.QRect(30, 280, 141, 51))
+        self.findButton.setStyleSheet("")
+        self.findButton.setObjectName("findButton")
+        self.subButton = QtWidgets.QPushButton(self.widget)
+        self.subButton.setGeometry(QtCore.QRect(30, 380, 141, 51))
+        self.subButton.setStyleSheet("QPushButton{\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
+"border: 2px solid #85efff;\n"
+"border-radius: 15px;    \n"
+"font-family: roboto;\n"
+"color:rgb(255, 255, 255);\n"
+"font-size: 16px;\n"
+"\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));\n"
+"    border: 2px solid #90ff94;\n"
+"}")
+        self.subButton.setObjectName("subButton")
+        self.addButton = QtWidgets.QPushButton(self.widget)
+        self.addButton.setGeometry(QtCore.QRect(30, 380, 141, 51))
+        self.addButton.setStyleSheet("")
+        self.addButton.setObjectName("addButton")
+        self.likeButton = QtWidgets.QPushButton(self.widget)
+        self.likeButton.setGeometry(QtCore.QRect(30, 480, 141, 51))
+        self.likeButton.setStyleSheet("QPushButton{\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
+"border: 2px solid #85efff;\n"
+"border-radius: 15px;    \n"
+"font-family: roboto;\n"
+"color:rgb(255, 255, 255);\n"
+"font-size: 16px;\n"
+"\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));\n"
+"    border: 2px solid #90ff94;\n"
+"}")
         self.likeButton.setObjectName("likeButton")
+        self.delButton = QtWidgets.QPushButton(self.widget)
+        self.delButton.setGeometry(QtCore.QRect(30, 480, 141, 51))
+        self.delButton.setStyleSheet("")
+        self.delButton.setObjectName("delButton")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -77,13 +146,13 @@ class Ui_MainWindow(object):
         item = self.tableWidget.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "rating"))
         self.loadButton.setText(_translate("MainWindow", "Загрузить"))
+        self.outButton.setText(_translate("MainWindow", "Выйти"))
         self.loginButton.setText(_translate("MainWindow", "Войти"))
         self.findButton.setText(_translate("MainWindow", "Найти"))
-        self.addButton.setText(_translate("MainWindow", "Добавить"))
-        self.delButton.setText(_translate("MainWindow", "Удалить"))
         self.subButton.setText(_translate("MainWindow", "Подписка"))
-        self.outButton.setText(_translate("MainWindow", "Выйти"))
+        self.addButton.setText(_translate("MainWindow", "Добавить"))
         self.likeButton.setText(_translate("MainWindow", "Избранное"))
+        self.delButton.setText(_translate("MainWindow", "Удалить"))
 
 
 if __name__ == "__main__":

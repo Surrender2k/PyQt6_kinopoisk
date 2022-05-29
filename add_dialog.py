@@ -13,88 +13,117 @@ class Ui_AddDialog(object):
     def setupUi(self, AddDialog):
         AddDialog.setObjectName("AddDialog")
         AddDialog.resize(400, 654)
+        AddDialog.setStyleSheet("QDialog#AddDialog{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
+"}\n"
+"\n"
+"QPushButton{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 140, 0, 255), stop:1 rgba(0, 212, 255, 255));\n"
+"    border: 2px solid #85efff;\n"
+"    border-radius: 15px;    \n"
+"    color: rgb(255, 255, 255);\n"
+"    font-family: roboto;\n"
+"    font-size: 16px;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));\n"
+"    border: 2px solid #90ff94;\n"
+"}\n"
+"\n"
+"QLabel{\n"
+"    font-family: roboto;\n"
+"    font-size: 28px;\n"
+"    color: rgb(255, 255, 255);\n"
+"}\n"
+"\n"
+"QLineEdit{\n"
+"    border-radius: 15px;\n"
+"    font-family: roboto;\n"
+"    font-size: 20px;\n"
+"}")
         self.label = QtWidgets.QLabel(AddDialog)
-        self.label.setGeometry(QtCore.QRect(20, 20, 101, 41))
+        self.label.setGeometry(QtCore.QRect(20, 20, 141, 41))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.nameEdit = QtWidgets.QLineEdit(AddDialog)
         self.nameEdit.setGeometry(QtCore.QRect(20, 60, 341, 31))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.nameEdit.setFont(font)
         self.nameEdit.setObjectName("nameEdit")
         self.label_2 = QtWidgets.QLabel(AddDialog)
-        self.label_2.setGeometry(QtCore.QRect(20, 110, 131, 41))
+        self.label_2.setGeometry(QtCore.QRect(20, 110, 181, 41))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.yearEdit = QtWidgets.QLineEdit(AddDialog)
         self.yearEdit.setGeometry(QtCore.QRect(20, 150, 61, 31))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.yearEdit.setFont(font)
         self.yearEdit.setObjectName("yearEdit")
         self.label_3 = QtWidgets.QLabel(AddDialog)
-        self.label_3.setGeometry(QtCore.QRect(20, 200, 221, 41))
+        self.label_3.setGeometry(QtCore.QRect(20, 200, 301, 41))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.countryEdit = QtWidgets.QLineEdit(AddDialog)
         self.countryEdit.setGeometry(QtCore.QRect(20, 240, 341, 31))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.countryEdit.setFont(font)
         self.countryEdit.setObjectName("countryEdit")
         self.label_4 = QtWidgets.QLabel(AddDialog)
         self.label_4.setGeometry(QtCore.QRect(20, 290, 101, 41))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.genreEdit = QtWidgets.QLineEdit(AddDialog)
         self.genreEdit.setGeometry(QtCore.QRect(20, 330, 341, 31))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.genreEdit.setFont(font)
         self.genreEdit.setObjectName("genreEdit")
         self.label_5 = QtWidgets.QLabel(AddDialog)
-        self.label_5.setGeometry(QtCore.QRect(20, 390, 101, 41))
+        self.label_5.setGeometry(QtCore.QRect(20, 390, 161, 41))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         self.directorEdit = QtWidgets.QLineEdit(AddDialog)
         self.directorEdit.setGeometry(QtCore.QRect(20, 430, 341, 31))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.directorEdit.setFont(font)
         self.directorEdit.setObjectName("directorEdit")
         self.label_6 = QtWidgets.QLabel(AddDialog)
-        self.label_6.setGeometry(QtCore.QRect(20, 490, 101, 41))
+        self.label_6.setGeometry(QtCore.QRect(20, 490, 141, 41))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
         self.ratingEdit = QtWidgets.QLineEdit(AddDialog)
         self.ratingEdit.setGeometry(QtCore.QRect(20, 530, 341, 31))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(16)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.ratingEdit.setFont(font)
         self.ratingEdit.setObjectName("ratingEdit")
         self.addButton = QtWidgets.QPushButton(AddDialog)

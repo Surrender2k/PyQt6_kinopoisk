@@ -13,21 +13,57 @@ class Ui_SubDialog(object):
     def setupUi(self, SubDialog):
         SubDialog.setObjectName("SubDialog")
         SubDialog.resize(515, 300)
+        SubDialog.setStyleSheet("QDialog#SubDialog{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
+"}\n"
+"\n"
+"QPushButton{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 140, 0, 255), stop:1 rgba(0, 212, 255, 255));\n"
+"    border: 2px solid #85efff;\n"
+"    border-radius: 15px;    \n"
+"    color: rgb(255, 255, 255);\n"
+"    font-family: roboto;\n"
+"    font-size: 13px;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));\n"
+"    border: 2px solid #90ff94;\n"
+"}\n"
+"\n"
+"QLabel{\n"
+"    font-family: roboto;\n"
+"    font-size: 28px;\n"
+"    color: rgb(255, 255, 255);\n"
+"}\n"
+"\n"
+"QLineEdit{\n"
+"    border-radius: 15px;\n"
+"    font-family: roboto;\n"
+"    font-size: 20px;\n"
+"}\n"
+"\n"
+"\n"
+"QLabel#label{\n"
+"    font-family: roboto;\n"
+"    font-size: 12px;\n"
+"    color: rgb(255, 255, 255);\n"
+"}")
         self.buyButton = QtWidgets.QPushButton(SubDialog)
         self.buyButton.setGeometry(QtCore.QRect(20, 200, 151, 51))
         self.buyButton.setObjectName("buyButton")
         self.status_label = QtWidgets.QLabel(SubDialog)
         self.status_label.setGeometry(QtCore.QRect(30, 10, 441, 51))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(20)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.status_label.setFont(font)
         self.status_label.setObjectName("status_label")
         self.until_label = QtWidgets.QLabel(SubDialog)
         self.until_label.setGeometry(QtCore.QRect(30, 80, 441, 51))
         font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(20)
+        font.setFamily("roboto")
+        font.setPointSize(-1)
         self.until_label.setFont(font)
         self.until_label.setObjectName("until_label")
         self.buyButton_2 = QtWidgets.QPushButton(SubDialog)
@@ -37,7 +73,7 @@ class Ui_SubDialog(object):
         self.buyButton_3.setGeometry(QtCore.QRect(360, 200, 151, 51))
         self.buyButton_3.setObjectName("buyButton_3")
         self.label = QtWidgets.QLabel(SubDialog)
-        self.label.setGeometry(QtCore.QRect(20, 170, 151, 21))
+        self.label.setGeometry(QtCore.QRect(30, 170, 181, 21))
         self.label.setObjectName("label")
 
         self.retranslateUi(SubDialog)

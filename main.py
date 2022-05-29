@@ -166,7 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         password = log_d.passEdit.text()
         admin = True
         if log_d.is_found:
-            if not log_d.is_admin:
+            if log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
             else:
@@ -205,13 +205,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def loadDB(self):
         # TODO
-        self.tableWidget.setColumnWidth(0, 275)  # name
-        self.tableWidget.setColumnWidth(1, 5)  # year
-        self.tableWidget.setColumnWidth(2, 133)  # country
-        self.tableWidget.setColumnWidth(3, 133)  # genre
-        self.tableWidget.setColumnWidth(4, 133)  # director
-        self.tableWidget.setColumnWidth(5, 10)  # rate
-
         try:
             with self.connection.cursor() as cur:
                 get_data_query = 'SELECT * FROM film'
@@ -222,6 +215,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[3])))  # name
                     i += 1
                 # self.connection.commit()
+                self.tableWidget.setColumnWidth(0, 275)  # name
+                self.tableWidget.setColumnWidth(1, 5)  # year
+                self.tableWidget.setColumnWidth(2, 133)  # country
+                self.tableWidget.setColumnWidth(3, 133)  # genre
+                self.tableWidget.setColumnWidth(4, 133)  # director
+                self.tableWidget.setColumnWidth(5, 10)  # rate
+
+
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Подключение к базе данных не удалось')
             print(ex)
