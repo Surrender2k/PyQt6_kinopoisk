@@ -1,17 +1,22 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QDialog, QMainWindow, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QDialog, QMainWindow, QTableWidgetItem, QMessageBox
 from main_window import Ui_MainWindow
 from login_dialog import Ui_LoginDialog
-from find_dialog import Ui_Dialog
+from find_dialog import Ui_FindDialog
+from add_dialog import Ui_AddDialog
 
 import pymysql
 
 
 # pyuic6 -x find_dialog.ui -o find_dialog.py
 
-class FindDialog(QDialog, Ui_Dialog):
+class FindDialog(QDialog, Ui_FindDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.findButton.clicked.connect(self.findButtonClicked)
+
+    def findButtonClicked(self):
+        self.close()
 
 
 # pyuic6 -x login_dialog.ui -o login_dialog.py
@@ -20,6 +25,29 @@ class LoginDialog(QDialog, Ui_LoginDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.logButton.clicked.connect(self.logButtonClicked)
+
+    def logButtonClicked(self):
+        self.close()
+
+
+# pyuic6 -x add_dialog.ui -o add_dialog.py
+
+class AddDialog(QDialog, Ui_AddDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.addButton.clicked.connect(self.addButtonClicked)
+
+    def addButtonClicked(self):
+        if self.check_fields():
+            self.close()
+        else:
+            QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
+
+    def check_fields(self):
+            return not(self.nameEdit.text() == '' or self.yearEdit.text() or self.countryEdit.text() == '' or self.genreEdit.text() or self.directorEdit.text() == '' or self.ratingEdit.text()=='')
+
 
 # TODO
 # Написать функции подключения к бд, очищения таблицы, функции перехвата сигнала
@@ -40,32 +68,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.addButton.hide()
         self.delButton.hide()
 
-
         self.loadButton.clicked.connect(self.loadDB)  # Загрузить
-        self.loginButton.clicked.connect(self.loginButtonClicked) # Войти
-        self.findButton.clicked.connect(self.findButtonClicked) # Найти
+        self.loginButton.clicked.connect(self.loginButtonClicked)  # Войти
+        self.findButton.clicked.connect(self.findButtonClicked)  # Найти
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
         log_d.exec()
-        # if admin -> to reveal add and delete buttons
-        # TODO
+        login = log_d.loginEdit.text()
+        password = log_d.passEdit.text()
+        admin = False
+        if login != '' != password:
+            # sql query
+            # TODO
+            if admin:
+                self.addButton.show()
+                self.delButton.show()
 
     def loadDB(self):
         # TODO
         try:
             connection = pymysql.connect(
                 host='localhost',
-                port='3306',
-                user='user',
-                database='db_name',
+                port=3306,
+                user='root',
+                password='your_password',
+                database='pyqt6',
                 cursorclass=pymysql.cursors.DictCursor
             )
             print('success\n# * 20')
 
             try:
                 with connection.cursor() as cur:
-                    get_data_query = 'SELECT * FROM'
+                    get_data_query = 'SELECT * FROM pyqt6.films;'
                     i = 0
                     for row in cur.execute(get_data_query):
                         self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # name

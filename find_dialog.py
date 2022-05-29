@@ -9,36 +9,36 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 160)
-        self.findEdit = QtWidgets.QLineEdit(Dialog)
+class Ui_FindDialog(object):
+    def setupUi(self, FindDialog):
+        FindDialog.setObjectName("FindDialog")
+        FindDialog.resize(400, 160)
+        self.findEdit = QtWidgets.QLineEdit(FindDialog)
         self.findEdit.setGeometry(QtCore.QRect(50, 20, 311, 41))
         font = QtGui.QFont()
         font.setFamily("Roboto")
         font.setPointSize(24)
         self.findEdit.setFont(font)
         self.findEdit.setObjectName("findEdit")
-        self.findButton = QtWidgets.QPushButton(Dialog)
+        self.findButton = QtWidgets.QPushButton(FindDialog)
         self.findButton.setGeometry(QtCore.QRect(120, 90, 171, 41))
         self.findButton.setObjectName("findButton")
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(FindDialog)
+        QtCore.QMetaObject.connectSlotsByName(FindDialog)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, FindDialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.findEdit.setPlaceholderText(_translate("Dialog", "Поиск"))
-        self.findButton.setText(_translate("Dialog", "Найти"))
+        FindDialog.setWindowTitle(_translate("FindDialog", "Dialog"))
+        self.findEdit.setPlaceholderText(_translate("FindDialog", "Поиск"))
+        self.findButton.setText(_translate("FindDialog", "Найти"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
+    FindDialog = QtWidgets.QDialog()
+    ui = Ui_FindDialog()
+    ui.setupUi(FindDialog)
+    FindDialog.show()
     sys.exit(app.exec())
