@@ -54,6 +54,9 @@ class Ui_MainWindow(object):
         self.outButton = QtWidgets.QPushButton(MainWindow)
         self.outButton.setGeometry(QtCore.QRect(30, 170, 141, 51))
         self.outButton.setObjectName("outButton")
+        self.likeButton = QtWidgets.QPushButton(MainWindow)
+        self.likeButton.setGeometry(QtCore.QRect(30, 470, 141, 51))
+        self.likeButton.setObjectName("likeButton")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -80,6 +83,7 @@ class Ui_MainWindow(object):
         self.delButton.setText(_translate("MainWindow", "Удалить"))
         self.subButton.setText(_translate("MainWindow", "Подписка"))
         self.outButton.setText(_translate("MainWindow", "Выйти"))
+        self.likeButton.setText(_translate("MainWindow", "Избранное"))
 
 
 if __name__ == "__main__":

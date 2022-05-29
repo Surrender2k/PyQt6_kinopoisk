@@ -159,6 +159,19 @@
     <string>Выйти</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="likeButton">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>470</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Избранное</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

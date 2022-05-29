@@ -5,6 +5,7 @@ from login_dialog import Ui_LoginDialog
 from find_dialog import Ui_FindDialog
 from add_dialog import Ui_AddDialog
 from delete_dialog import Ui_DeleteDialog
+from sub_dialog import Ui_SubDialog
 
 import pymysql
 
@@ -108,7 +109,13 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
         return not (self.deleteEdit.text() == '')
 
 
-# TODO Написать  функции перехвата сигнала
+# pyuic6 -x sub_dialog.ui -o sub_dialog.py
+class SubDialog(QDialog, Ui_SubDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+
+
 
 # pyuic6 -x main_window.ui -o main_window.py
 
@@ -128,8 +135,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget.setColumnWidth(3, 133)  # genre
         self.tableWidget.setColumnWidth(4, 133)  # director
         self.tableWidget.setColumnWidth(5, 133)  # rate
+
         self.subButton.hide()
         self.outButton.hide()
+        self.likeButton.hide()
+
         self.in_Account = True
         self.sub_enabled = False
 
@@ -141,6 +151,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.subButton.clicked.connect(self.subButtonClicked)  # Подписка
         self.outButton.clicked.connect(self.outButtonClicked)  # Выйти
+        self.likeButton.clicked.connect(self.likeButtonClicked) # Избранное
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
@@ -149,12 +160,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         password = log_d.passEdit.text()
         admin = True
         if log_d.is_found:
-            if log_d.is_admin:
+            if not log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
             else:
                 # TODO
                 self.subButton.show()
+                self.likeButton.show()
             self.loginButton.hide()
             self.outButton.show()
 
@@ -166,6 +178,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         add_d = AddDialog(self)
         add_d.exec()
         if add_d.is_added:
+            self.rowCount += 1
             self.loadDB()
 
     def delButtonClicked(self):
@@ -173,9 +186,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         del_d.exec()
         if del_d.is_deleted:
             # TODO
+            self.rowCount -= 1
             self.loadDB()
 
+    # TODO
     def subButtonClicked(self):
+        sub_d = SubDialog(self)
+        sub_d.exec()
+
+    def likeButtonClicked(self):
         pass
 
     def loadDB(self):
@@ -224,17 +243,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.delButton.hide()
         self.outButton.hide()
         self.subButton.hide()
+        self.likeButton.hide()
         self.loginButton.show()
-
-    # def toggle_add_sub_button(self):
-    #     if not self.sub_enabled:
-    #         self.addButton.hide()
-    #         self.subButton.show()
-    #         self.sub_enabled = True
-    #     else:
-    #         self.subButton.hide()
-    #         self.addButton.show()
-    #         self.sub_enabled = False
 
 
 if __name__ == "__main__":
