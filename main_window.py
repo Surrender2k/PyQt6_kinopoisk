@@ -12,11 +12,11 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1100, 600)
-        MainWindow.setMinimumSize(QtCore.QSize(1100, 600))
-        MainWindow.setMaximumSize(QtCore.QSize(1100, 600))
+        MainWindow.resize(1000, 600)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 600))
+        MainWindow.setMaximumSize(QtCore.QSize(1000, 600))
         self.tableWidget = QtWidgets.QTableWidget(MainWindow)
-        self.tableWidget.setGeometry(QtCore.QRect(200, 0, 900, 600))
+        self.tableWidget.setGeometry(QtCore.QRect(200, 0, 800, 600))
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(6)

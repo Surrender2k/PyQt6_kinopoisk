@@ -1,9 +1,10 @@
-from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QTableWidgetItem, QMessageBox
+from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
 from PyQt6.QtGui import QAction
 from main_window import Ui_MainWindow
 from login_dialog import Ui_LoginDialog
 from find_dialog import Ui_FindDialog
 from add_dialog import Ui_AddDialog
+from delete_dialog import Ui_DeleteDialog
 
 import pymysql
 
@@ -30,9 +31,11 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.logButton.clicked.connect(self.logButtonClicked)
+        self.is_correct_fields = False
 
     def logButtonClicked(self):
         if self.check_fields():
+            self.is_correct_fields = True
             self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
@@ -48,20 +51,48 @@ class AddDialog(QDialog, Ui_AddDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.addButton.clicked.connect(self.addButtonClicked)
+        self.is_correct_fields = False
 
     def addButtonClicked(self):
         if self.check_fields():
+            self.is_correct_fields = False
             self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
     def check_fields(self):
-        return not (self.nameEdit.text() == '' or self.yearEdit.text() or self.countryEdit.text() == ''
-                    or self.genreEdit.text() or self.directorEdit.text() == '' or self.ratingEdit.text() == '')
+        return not (self.nameEdit.text() == '' or self.yearEdit.text() == '' or self.countryEdit.text() == ''
+                    or self.genreEdit.text() == '' or self.directorEdit.text() == '' or self.ratingEdit.text() == '')
 
 
-# TODO
-# Написать функции подключения к бд, очищения таблицы, функции перехвата сигнала
+# pyuic6 -x delete_dialog.ui -o delete_dialog.py
+class DeleteDialog(QDialog, Ui_DeleteDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.deleteButton.clicked.connect(self.deleteButtonClicked)
+        self.is_found = False
+
+    def deleteButtonClicked(self):
+        if self.check_fields():
+            if self.find():
+                self.is_found = True
+                self.close()
+            else:
+                QMessageBox.warning(self, 'Ошибка', 'Фильм не найден')
+        else:
+            QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
+
+    def check_fields(self):
+        return not (self.deleteEdit.text() == '')
+
+    # TODO sql command
+    def find(self):
+        name = self.deleteEdit.text()
+        pass
+
+
+# TODO Написать  функции перехвата сигнала
 
 # pyuic6 -x main_window.ui -o main_window.py
 
@@ -70,37 +101,59 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.tableWidget.setColumnWidth(0, 300)  # name
-        self.tableWidget.setColumnWidth(1, 25)  # year
-        self.tableWidget.setColumnWidth(2, 133)  # country
-        self.tableWidget.setColumnWidth(3, 133)  # genre
-        self.tableWidget.setColumnWidth(4, 133)  # director
-        self.tableWidget.setColumnWidth(5, 49)  # rating
         self.rowCount = 995
         self.addButton.hide()
         self.delButton.hide()
         self.connection = None
         self.connectDB()
+        self.tableWidget.setColumnWidth(0, 133)  # name
+        self.tableWidget.setColumnWidth(1, 133)  # year
+        self.tableWidget.setColumnWidth(2, 133)  # country
+        self.tableWidget.setColumnWidth(3, 133)  # genre
+        self.tableWidget.setColumnWidth(4, 133)  # director
+        self.tableWidget.setColumnWidth(5, 133)  # rate
 
         self.loadButton.clicked.connect(self.loadDB)  # Загрузить
         self.loginButton.clicked.connect(self.loginButtonClicked)  # Войти
         self.findButton.clicked.connect(self.findButtonClicked)  # Найти
+        self.addButton.clicked.connect(self.addButtonClicked)  # Добавить
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
         res = log_d.exec()
         login = log_d.loginEdit.text()
         password = log_d.passEdit.text()
-        admin = False
-        if login != '' != password:
-            # sql query and check if admin
-            # TODO
+        admin = True
+        if log_d.is_correct_fields:
+            # TODO sql query and check if admin
             if admin:
                 self.addButton.show()
                 self.delButton.show()
 
+    def findButtonClicked(self):
+        find_d = FindDialog(self)
+        find_d.exec()
+
+    def addButtonClicked(self):
+        add_d = AddDialog(self)
+        add_d.exec()
+        if add_d.is_correct_fields:
+            name = add_d.nameEdit.text()
+            year = add_d.yearEdit.text()
+            country = add_d.countryEdit.text()
+            genre = add_d.genreEdit.text()
+            director = add_d.directorEdit.text()
+            rating = add_d.ratingEdit.text()
+
     def loadDB(self):
         # TODO
+        self.tableWidget.setColumnWidth(0, 275)  # name
+        self.tableWidget.setColumnWidth(1, 5)  # year
+        self.tableWidget.setColumnWidth(2, 133)  # country
+        self.tableWidget.setColumnWidth(3, 133)  # genre
+        self.tableWidget.setColumnWidth(4, 133)  # director
+        self.tableWidget.setColumnWidth(5, 10)  # rate
+
         try:
             with self.connection.cursor() as cur:
                 get_data_query = 'SELECT * FROM film'
@@ -109,16 +162,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setRowCount(self.rowCount)
                 for row in cur.fetchall():
                     self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[3])))  # name
-
                     i += 1
                 # self.connection.commit()
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Подключение к базе данных не удалось')
             print(ex)
-
-    def findButtonClicked(self):
-        find_d = FindDialog(self)
-        find_d.exec()
 
     def connectDB(self):
         try:
@@ -126,7 +174,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 host='localhost',
                 port=3306,
                 user='root',
-                password='pass',
+                password='****!',
                 database='filmoteka'
             )
         except Exception as ex:
