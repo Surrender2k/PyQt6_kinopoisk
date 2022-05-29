@@ -71,11 +71,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.tableWidget.setColumnWidth(0, 300)  # name
-        self.tableWidget.setColumnWidth(1, 50)  # year
+        self.tableWidget.setColumnWidth(1, 25)  # year
         self.tableWidget.setColumnWidth(2, 133)  # country
         self.tableWidget.setColumnWidth(3, 133)  # genre
         self.tableWidget.setColumnWidth(4, 133)  # director
         self.tableWidget.setColumnWidth(5, 49)  # rating
+        self.rowCount = 995
         self.addButton.hide()
         self.delButton.hide()
         self.connection = None
@@ -102,16 +103,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # TODO
         try:
             with self.connection.cursor() as cur:
-                get_data_query = 'SELECT * FROM pyqt6.films;'
+                get_data_query = 'SELECT * FROM film'
                 i = 0
-                for row in cur.execute(get_data_query):
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # name
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # year
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # country
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # genre
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # director
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # rating
+                cur.execute(get_data_query)
+                self.tableWidget.setRowCount(self.rowCount)
+                for row in cur.fetchall():
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[3])))  # name
+
                     i += 1
+                # self.connection.commit()
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Подключение к базе данных не удалось')
             print(ex)
@@ -126,16 +126,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 host='localhost',
                 port=3306,
                 user='root',
-                password='****',
-                database='pyqt6',
-                cursorclass=pymysql.cursors.DictCursor
+                password='pass',
+                database='filmoteka'
             )
         except Exception as ex:
             print('Connection failed')
             print(ex)
 
     def closeDB(self):
-        if self.connection != None:
+        if self.connection is not None:
             self.connection.close()
 
     def closeEvent(self, event):
