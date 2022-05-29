@@ -114,6 +114,12 @@ class SubDialog(QDialog, Ui_SubDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.buyButton.clicked.connect(self.buyButtonClicked)
+        self.buyButton_2.clicked.connect(self.buyButtonClicked)
+        self.buyButton_3.clicked.connect(self.buyButtonClicked)
+
+    def buyButtonClicked(self):
+        QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
 
 
 
