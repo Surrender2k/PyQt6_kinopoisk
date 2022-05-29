@@ -31,17 +31,28 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.logButton.clicked.connect(self.logButtonClicked)
-        self.is_correct_fields = False
+        self.is_found = False
+        self.is_admin = False
 
     def logButtonClicked(self):
         if self.check_fields():
-            self.is_correct_fields = True
+            self.find()
             self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
     def check_fields(self):
         return not (self.loginEdit.text() == '' or self.passEdit.text() == '')
+
+    def find(self):
+        # TODO SQL найти пользователя по логину и паролю и определить админ это или пользователь
+        try:
+            if True:  # Проверка, что пользователь есть в базе
+                self.is_found = True
+                if True:  # Проверка, что пользователь это админ
+                    self.is_admin = True
+        except Exception as ex:
+            QMessageBox.warning(self, 'Ошибка', 'Пользователь не найден')
 
 
 # pyuic6 -x add_dialog.ui -o add_dialog.py
@@ -72,6 +83,7 @@ class AddDialog(QDialog, Ui_AddDialog):
 
 
 # pyuic6 -x delete_dialog.ui -o delete_dialog.py
+
 class DeleteDialog(QDialog, Ui_DeleteDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -95,11 +107,6 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
     def check_fields(self):
         return not (self.deleteEdit.text() == '')
 
-    # TODO sql command
-    def find(self):
-        name = self.deleteEdit.text()
-        pass
-
 
 # TODO Написать  функции перехвата сигнала
 
@@ -121,24 +128,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget.setColumnWidth(3, 133)  # genre
         self.tableWidget.setColumnWidth(4, 133)  # director
         self.tableWidget.setColumnWidth(5, 133)  # rate
+        self.subButton.hide()
+        self.outButton.hide()
+        self.in_Account = True
+        self.sub_enabled = False
 
         self.loadButton.clicked.connect(self.loadDB)  # Загрузить
         self.loginButton.clicked.connect(self.loginButtonClicked)  # Войти
         self.findButton.clicked.connect(self.findButtonClicked)  # Найти
         self.addButton.clicked.connect(self.addButtonClicked)  # Добавить
-        self.delButton.clicked.connect(self.delButtonClicked) # Удалить
+        self.delButton.clicked.connect(self.delButtonClicked)  # Удалить
+
+        self.subButton.clicked.connect(self.subButtonClicked)  # Подписка
+        self.outButton.clicked.connect(self.outButtonClicked)  # Выйти
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
-        res = log_d.exec()
+        log_d.exec()
         login = log_d.loginEdit.text()
         password = log_d.passEdit.text()
         admin = True
-        if log_d.is_correct_fields:
-            # TODO sql query and check if admin
-            if admin:
+        if log_d.is_found:
+            if log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
+            else:
+                # TODO
+                self.subButton.show()
+            self.loginButton.hide()
+            self.outButton.show()
 
     def findButtonClicked(self):
         find_d = FindDialog(self)
@@ -151,11 +169,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.loadDB()
 
     def delButtonClicked(self):
-        del_d = DeleteDialog()
+        del_d = DeleteDialog(self)
         del_d.exec()
-        if del_d.is_found:
+        if del_d.is_deleted:
             # TODO
             self.loadDB()
+
+    def subButtonClicked(self):
+        pass
 
     def loadDB(self):
         # TODO
@@ -193,13 +214,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print('Connection failed')
             print(ex)
 
-    def closeDB(self):
+    def closeEvent(self, event):
         if self.connection is not None:
             self.connection.close()
-
-    def closeEvent(self, event):
-        self.closeDB()
         sys.exit()
+
+    def outButtonClicked(self):
+        self.addButton.hide()
+        self.delButton.hide()
+        self.outButton.hide()
+        self.subButton.hide()
+        self.loginButton.show()
+
+    # def toggle_add_sub_button(self):
+    #     if not self.sub_enabled:
+    #         self.addButton.hide()
+    #         self.subButton.show()
+    #         self.sub_enabled = True
+    #     else:
+    #         self.subButton.hide()
+    #         self.addButton.show()
+    #         self.sub_enabled = False
 
 
 if __name__ == "__main__":

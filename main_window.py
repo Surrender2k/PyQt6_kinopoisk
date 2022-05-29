@@ -48,6 +48,12 @@ class Ui_MainWindow(object):
         self.delButton = QtWidgets.QPushButton(MainWindow)
         self.delButton.setGeometry(QtCore.QRect(30, 470, 141, 51))
         self.delButton.setObjectName("delButton")
+        self.subButton = QtWidgets.QPushButton(MainWindow)
+        self.subButton.setGeometry(QtCore.QRect(30, 370, 141, 51))
+        self.subButton.setObjectName("subButton")
+        self.outButton = QtWidgets.QPushButton(MainWindow)
+        self.outButton.setGeometry(QtCore.QRect(30, 170, 141, 51))
+        self.outButton.setObjectName("outButton")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -72,6 +78,8 @@ class Ui_MainWindow(object):
         self.findButton.setText(_translate("MainWindow", "Найти"))
         self.addButton.setText(_translate("MainWindow", "Добавить"))
         self.delButton.setText(_translate("MainWindow", "Удалить"))
+        self.subButton.setText(_translate("MainWindow", "Подписка"))
+        self.outButton.setText(_translate("MainWindow", "Выйти"))
 
 
 if __name__ == "__main__":
