@@ -12,12 +12,20 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_FindDialog(object):
     def setupUi(self, FindDialog):
         FindDialog.setObjectName("FindDialog")
-        FindDialog.resize(400, 160)
-        FindDialog.setStyleSheet("QDialog#FindDialog{\n"
+        FindDialog.resize(332, 160)
+        FindDialog.setMinimumSize(QtCore.QSize(332, 160))
+        FindDialog.setMaximumSize(QtCore.QSize(332, 160))
+        FindDialog.setStyleSheet("")
+        self.widget = QtWidgets.QWidget(FindDialog)
+        self.widget.setGeometry(QtCore.QRect(0, 0, 332, 160))
+        self.widget.setMinimumSize(QtCore.QSize(332, 160))
+        self.widget.setMaximumSize(QtCore.QSize(332, 160))
+        self.widget.setStyleSheet("QWidget#widget{\n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
 "}\n"
 "\n"
 "QPushButton{\n"
+"    \n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 140, 0, 255), stop:1 rgba(0, 212, 255, 255));\n"
 "    border: 2px solid #85efff;\n"
 "    border-radius: 15px;    \n"
@@ -32,8 +40,6 @@ class Ui_FindDialog(object):
 "}\n"
 "\n"
 "QLabel{\n"
-"    font-family: roboto;\n"
-"    font-size: 28px;\n"
 "    color: rgb(255, 255, 255);\n"
 "}\n"
 "\n"
@@ -43,8 +49,9 @@ class Ui_FindDialog(object):
 "    font-size: 20px;\n"
 "}\n"
 "")
-        self.findEdit = QtWidgets.QLineEdit(FindDialog)
-        self.findEdit.setGeometry(QtCore.QRect(40, 30, 311, 41))
+        self.widget.setObjectName("widget")
+        self.findEdit = QtWidgets.QLineEdit(self.widget)
+        self.findEdit.setGeometry(QtCore.QRect(10, 30, 311, 41))
         font = QtGui.QFont()
         font.setFamily("roboto")
         font.setPointSize(-1)
@@ -52,8 +59,8 @@ class Ui_FindDialog(object):
         self.findEdit.setCursorPosition(0)
         self.findEdit.setDragEnabled(False)
         self.findEdit.setObjectName("findEdit")
-        self.findButton = QtWidgets.QPushButton(FindDialog)
-        self.findButton.setGeometry(QtCore.QRect(110, 90, 171, 41))
+        self.findButton = QtWidgets.QPushButton(self.widget)
+        self.findButton.setGeometry(QtCore.QRect(80, 100, 171, 41))
         self.findButton.setObjectName("findButton")
 
         self.retranslateUi(FindDialog)

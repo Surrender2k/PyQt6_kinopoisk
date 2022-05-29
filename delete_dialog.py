@@ -13,11 +13,17 @@ class Ui_DeleteDialog(object):
     def setupUi(self, DeleteDialog):
         DeleteDialog.setObjectName("DeleteDialog")
         DeleteDialog.resize(400, 196)
-        DeleteDialog.setStyleSheet("QDialog#DeleteDialog{\n"
+        DeleteDialog.setMinimumSize(QtCore.QSize(400, 196))
+        DeleteDialog.setMaximumSize(QtCore.QSize(400, 196))
+        DeleteDialog.setStyleSheet("")
+        self.widget = QtWidgets.QWidget(DeleteDialog)
+        self.widget.setGeometry(QtCore.QRect(0, 0, 400, 196))
+        self.widget.setStyleSheet("QWidget#widget{\n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
 "}\n"
 "\n"
 "QPushButton{\n"
+"    \n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 140, 0, 255), stop:1 rgba(0, 212, 255, 255));\n"
 "    border: 2px solid #85efff;\n"
 "    border-radius: 15px;    \n"
@@ -32,25 +38,24 @@ class Ui_DeleteDialog(object):
 "}\n"
 "\n"
 "QLabel{\n"
-"    font-family: roboto;\n"
-"    font-size: 28px;\n"
 "    color: rgb(255, 255, 255);\n"
 "}\n"
-"\n"
 "QLineEdit{\n"
 "    border-radius: 15px;\n"
 "    font-family: roboto;\n"
 "    font-size: 20px;\n"
 "}\n"
+"\n"
 "")
-        self.deleteEdit = QtWidgets.QLineEdit(DeleteDialog)
-        self.deleteEdit.setGeometry(QtCore.QRect(10, 60, 381, 41))
+        self.widget.setObjectName("widget")
+        self.deleteEdit = QtWidgets.QLineEdit(self.widget)
+        self.deleteEdit.setGeometry(QtCore.QRect(10, 50, 381, 41))
         font = QtGui.QFont()
         font.setFamily("roboto")
         font.setPointSize(-1)
         self.deleteEdit.setFont(font)
         self.deleteEdit.setObjectName("deleteEdit")
-        self.deleteButton = QtWidgets.QPushButton(DeleteDialog)
+        self.deleteButton = QtWidgets.QPushButton(self.widget)
         self.deleteButton.setGeometry(QtCore.QRect(110, 130, 181, 41))
         self.deleteButton.setObjectName("deleteButton")
 

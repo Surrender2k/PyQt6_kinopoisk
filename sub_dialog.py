@@ -13,17 +13,25 @@ class Ui_SubDialog(object):
     def setupUi(self, SubDialog):
         SubDialog.setObjectName("SubDialog")
         SubDialog.resize(515, 300)
-        SubDialog.setStyleSheet("QDialog#SubDialog{\n"
+        SubDialog.setMinimumSize(QtCore.QSize(515, 300))
+        SubDialog.setMaximumSize(QtCore.QSize(515, 300))
+        SubDialog.setStyleSheet("")
+        self.widget = QtWidgets.QWidget(SubDialog)
+        self.widget.setGeometry(QtCore.QRect(0, 0, 515, 300))
+        self.widget.setMinimumSize(QtCore.QSize(515, 300))
+        self.widget.setMaximumSize(QtCore.QSize(515, 300))
+        self.widget.setStyleSheet("QWidget#widget{\n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));\n"
 "}\n"
 "\n"
 "QPushButton{\n"
+"    \n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 140, 0, 255), stop:1 rgba(0, 212, 255, 255));\n"
 "    border: 2px solid #85efff;\n"
 "    border-radius: 15px;    \n"
 "    color: rgb(255, 255, 255);\n"
 "    font-family: roboto;\n"
-"    font-size: 13px;\n"
+"    font-size: 16px;\n"
 "}\n"
 "\n"
 "QPushButton:hover{\n"
@@ -32,8 +40,6 @@ class Ui_SubDialog(object):
 "}\n"
 "\n"
 "QLabel{\n"
-"    font-family: roboto;\n"
-"    font-size: 28px;\n"
 "    color: rgb(255, 255, 255);\n"
 "}\n"
 "\n"
@@ -42,39 +48,34 @@ class Ui_SubDialog(object):
 "    font-family: roboto;\n"
 "    font-size: 20px;\n"
 "}\n"
-"\n"
-"\n"
-"QLabel#label{\n"
-"    font-family: roboto;\n"
-"    font-size: 12px;\n"
-"    color: rgb(255, 255, 255);\n"
-"}")
-        self.buyButton = QtWidgets.QPushButton(SubDialog)
-        self.buyButton.setGeometry(QtCore.QRect(20, 200, 151, 51))
+"")
+        self.widget.setObjectName("widget")
+        self.label = QtWidgets.QLabel(self.widget)
+        self.label.setGeometry(QtCore.QRect(20, 180, 181, 21))
+        self.label.setObjectName("label")
+        self.buyButton_3 = QtWidgets.QPushButton(self.widget)
+        self.buyButton_3.setGeometry(QtCore.QRect(350, 210, 151, 51))
+        self.buyButton_3.setObjectName("buyButton_3")
+        self.buyButton_2 = QtWidgets.QPushButton(self.widget)
+        self.buyButton_2.setGeometry(QtCore.QRect(180, 210, 151, 51))
+        self.buyButton_2.setObjectName("buyButton_2")
+        self.buyButton = QtWidgets.QPushButton(self.widget)
+        self.buyButton.setGeometry(QtCore.QRect(10, 210, 151, 51))
         self.buyButton.setObjectName("buyButton")
-        self.status_label = QtWidgets.QLabel(SubDialog)
-        self.status_label.setGeometry(QtCore.QRect(30, 10, 441, 51))
+        self.status_label = QtWidgets.QLabel(self.widget)
+        self.status_label.setGeometry(QtCore.QRect(30, 20, 441, 51))
         font = QtGui.QFont()
-        font.setFamily("roboto")
-        font.setPointSize(-1)
+        font.setFamily("Roboto")
+        font.setPointSize(20)
         self.status_label.setFont(font)
         self.status_label.setObjectName("status_label")
-        self.until_label = QtWidgets.QLabel(SubDialog)
-        self.until_label.setGeometry(QtCore.QRect(30, 80, 441, 51))
+        self.until_label = QtWidgets.QLabel(self.widget)
+        self.until_label.setGeometry(QtCore.QRect(30, 90, 441, 51))
         font = QtGui.QFont()
-        font.setFamily("roboto")
-        font.setPointSize(-1)
+        font.setFamily("Roboto")
+        font.setPointSize(20)
         self.until_label.setFont(font)
         self.until_label.setObjectName("until_label")
-        self.buyButton_2 = QtWidgets.QPushButton(SubDialog)
-        self.buyButton_2.setGeometry(QtCore.QRect(190, 200, 151, 51))
-        self.buyButton_2.setObjectName("buyButton_2")
-        self.buyButton_3 = QtWidgets.QPushButton(SubDialog)
-        self.buyButton_3.setGeometry(QtCore.QRect(360, 200, 151, 51))
-        self.buyButton_3.setObjectName("buyButton_3")
-        self.label = QtWidgets.QLabel(SubDialog)
-        self.label.setGeometry(QtCore.QRect(30, 170, 181, 21))
-        self.label.setObjectName("label")
 
         self.retranslateUi(SubDialog)
         QtCore.QMetaObject.connectSlotsByName(SubDialog)
@@ -82,12 +83,12 @@ class Ui_SubDialog(object):
     def retranslateUi(self, SubDialog):
         _translate = QtCore.QCoreApplication.translate
         SubDialog.setWindowTitle(_translate("SubDialog", "Dialog"))
+        self.label.setText(_translate("SubDialog", "Нажмите для продолжения:"))
+        self.buyButton_3.setText(_translate("SubDialog", "150 рублей (1 месяц"))
+        self.buyButton_2.setText(_translate("SubDialog", "600 рублей (6 месяцев) "))
         self.buyButton.setText(_translate("SubDialog", "1000 руб (1 год)"))
         self.status_label.setText(_translate("SubDialog", "Статус "))
         self.until_label.setText(_translate("SubDialog", "Осталось"))
-        self.buyButton_2.setText(_translate("SubDialog", "600 рублей (6 месяцев) "))
-        self.buyButton_3.setText(_translate("SubDialog", "150 рублей (1 месяц"))
-        self.label.setText(_translate("SubDialog", "Нажмите для продолжения:"))
 
 
 if __name__ == "__main__":

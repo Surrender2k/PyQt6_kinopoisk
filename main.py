@@ -122,6 +122,8 @@ class SubDialog(QDialog, Ui_SubDialog):
         QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
 
 
+# pyuic6 -x reg_dialog.ui -o reg_dialog.py
+
 
 # pyuic6 -x main_window.ui -o main_window.py
 
