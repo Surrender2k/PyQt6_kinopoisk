@@ -51,12 +51,18 @@ class AddDialog(QDialog, Ui_AddDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.addButton.clicked.connect(self.addButtonClicked)
-        self.is_correct_fields = False
+        self.is_added = False
 
     def addButtonClicked(self):
+        # TODO
         if self.check_fields():
-            self.is_correct_fields = False
-            self.close()
+            try:
+                pass
+                self.is_added = True
+            except Exception as ex:
+                pass
+            finally:
+                self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
@@ -71,15 +77,18 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.deleteButton.clicked.connect(self.deleteButtonClicked)
-        self.is_found = False
+        self.is_deleted = False
 
     def deleteButtonClicked(self):
         if self.check_fields():
-            if self.find():
-                self.is_found = True
-                self.close()
-            else:
+            try:
+                # TODO sql
+                self.is_deleted = True
+                pass
+            except Exception as ex:
                 QMessageBox.warning(self, 'Ошибка', 'Фильм не найден')
+            finally:
+                self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
@@ -117,6 +126,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.loginButton.clicked.connect(self.loginButtonClicked)  # Войти
         self.findButton.clicked.connect(self.findButtonClicked)  # Найти
         self.addButton.clicked.connect(self.addButtonClicked)  # Добавить
+        self.delButton.clicked.connect(self.delButtonClicked) # Удалить
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
@@ -137,13 +147,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def addButtonClicked(self):
         add_d = AddDialog(self)
         add_d.exec()
-        if add_d.is_correct_fields:
-            name = add_d.nameEdit.text()
-            year = add_d.yearEdit.text()
-            country = add_d.countryEdit.text()
-            genre = add_d.genreEdit.text()
-            director = add_d.directorEdit.text()
-            rating = add_d.ratingEdit.text()
+        if add_d.is_added:
+            self.loadDB()
+
+    def delButtonClicked(self):
+        del_d = DeleteDialog()
+        del_d.exec()
+        if del_d.is_found:
+            # TODO
+            self.loadDB()
 
     def loadDB(self):
         # TODO
