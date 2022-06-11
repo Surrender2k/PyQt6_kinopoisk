@@ -236,15 +236,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             for row in films: 
 
                 counries = ''
-                for cur in self.database.getFilmCountries(row[1]):
+                for cur in self.database.getFilmCountries(row[0]):
                     counries += cur[0] + ', '
 
                 genres = ''
-                for cur in self.database.getFilmCategories(row[1]):
+                for cur in self.database.getFilmCategories(row[0]):
                     genres += cur[0] + ', '
 
                 directors = ''
-                for cur in self.database.getFilmDirectors(row[1]):
+                for cur in self.database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
                 
                 self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
