@@ -70,7 +70,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         try:
             if True:  # Проверка, что пользователь есть в базе
                 self.is_found = True
-                if True:  # Проверка, что пользователь это админ
+                if False:  # Проверка, что пользователь это админ
                     self.is_admin = True
         except Exception as ex:
             QMessageBox.warning(self, 'Ошибка', 'Пользователь не найден')
@@ -185,7 +185,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         log_d.exec()
         login = log_d.loginEdit.text()
         password = log_d.passEdit.text()
-        admin = True
+        admin = False
         if log_d.is_found:
             # TODO Узнать пользователь или админ
             if log_d.is_admin:
@@ -219,6 +219,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def subButtonClicked(self):
         sub_d = SubDialog(self)
         sub_d.exec()
+
 
     def likeButtonClicked(self):
         pass
