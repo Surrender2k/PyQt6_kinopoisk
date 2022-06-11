@@ -1,5 +1,7 @@
+from dataclasses import dataclass
 from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
 from PyQt6.QtGui import QAction
+from database import Database
 from main_window import Ui_MainWindow
 from login_dialog import Ui_LoginDialog
 from find_dialog import Ui_FindDialog
@@ -143,8 +145,6 @@ class SubDialog(QDialog, Ui_SubDialog):
         QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
 
 
-
-
 # pyuic6 -x main_window.ui -o main_window.py
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -152,11 +152,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.rowCount = 995
+        self.rowCount = 995 #???
         self.addButton.hide()
         self.delButton.hide()
-        self.connection = None
-        self.connectDB()
+        self.database = Database()
+        #self.connectDB()
         self.tableWidget.setColumnWidth(0, 133)  # name
         self.tableWidget.setColumnWidth(1, 133)  # year
         self.tableWidget.setColumnWidth(2, 133)  # country
@@ -229,49 +229,60 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #TODO вывести избранное
 
     def loadDB(self):
+        try: 
+            films = self.database.getAllFilms()
+            self.tableWidget.setRowCount(self.rowCount)
+            i = 0           
+            for row in films: 
 
-        try:
-            with self.connection.cursor() as cur:
-                # TODO Нужен нормальный запрос на фильмы
-                get_data_query = 'SELECT * FROM film'
-                i = 0
-                cur.execute(get_data_query)
-                self.tableWidget.setRowCount(self.rowCount)
-                for row in cur.fetchall():
-                    # сюда вставлять столбцы
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[1])))  # title
-                    self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
-                    self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rating
-                    i += 1
-                # self.connection.commit()
-                self.tableWidget.setColumnWidth(0, 275)  # name
-                self.tableWidget.setColumnWidth(1, 5)  # year
-                self.tableWidget.setColumnWidth(2, 133)  # country
-                self.tableWidget.setColumnWidth(3, 133)  # genre
-                self.tableWidget.setColumnWidth(4, 133)  # director
-                self.tableWidget.setColumnWidth(5, 10)  # rate
+                counries = ''
+                for cur in self.database.getFilmCountries(row[1]):
+                    counries += cur[0] + ', '
 
+                genres = ''
+                for cur in self.database.getFilmCategories(row[1]):
+                    genres += cur[0] + ', '
+
+                directors = ''
+                for cur in self.database.getFilmDirectors(row[1]):
+                    directors += cur[0] + ', '
+                
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(counries[:-2]))  # countries
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(genres[:-2]))  # genres
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
+                i += 1
+            
+            # self.connection.commit()
+            self.tableWidget.setColumnWidth(0, 275)  # name
+            self.tableWidget.setColumnWidth(1, 5)  # year
+            self.tableWidget.setColumnWidth(2, 133)  # country
+            self.tableWidget.setColumnWidth(3, 133)  # genre
+            self.tableWidget.setColumnWidth(4, 133)  # director
+            self.tableWidget.setColumnWidth(5, 10)  # rate
 
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Подключение к базе данных не удалось')
             print(ex)
 
-    def connectDB(self):
-        try:
-            self.connection = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                passwd="password",
-                database="filmoteka"
-            )
-        except Exception as ex:
-            print('Connection failed')
-            print(ex)
+    # def connectDB(self):
+    #     try:
+    #         self.connection = mysql.connector.connect(
+    #             host="localhost",
+    #             user="root",
+    #             passwd="password",
+    #             database="filmoteka"
+    #         )
+    #     except Exception as ex:
+    #         print('Connection failed')
+    #         print(ex)
 
-    def closeEvent(self, event):
-        if self.connection is not None:
-            self.connection.close()
-        sys.exit()
+    # def closeEvent(self, event):
+    #     if self.connection is not None:
+    #         self.connection.close()
+    #     sys.exit()
 
     def outButtonClicked(self):
         self.addButton.hide()
