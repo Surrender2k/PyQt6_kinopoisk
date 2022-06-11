@@ -7,7 +7,7 @@ class Database:
             self.db = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                passwd="password",
+                passwd="",
                 database="filmoteka"
             )
             self.cursor = self.db.cursor() 
@@ -34,3 +34,6 @@ class Database:
         query = f'SELECT director_name FROM film_has_director, film WHERE film.id = film_has_director.film_id AND film.id = \'{filmId}\''       
         self.cursor.execute(query)     
         return self.cursor.fetchall()
+
+    def close(self):
+        self.db.close()

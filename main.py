@@ -11,6 +11,7 @@ from sub_dialog import Ui_SubDialog
 from reg_dialog import Ui_RegDialog
 import mysql.connector
 
+
 # pyuic6 -x find_dialog.ui -o find_dialog.py
 
 class FindDialog(QDialog, Ui_FindDialog):
@@ -34,10 +35,9 @@ class RegDialog(QDialog, Ui_RegDialog):
         self.setupUi(self)
         self.regButton.clicked.connect(self.regButtonClicked)
 
-
     def regButtonClicked(self):
         # TODO зарегистрировать пользователя
-        #self.loginEdit.text # логин
+        # self.loginEdit.text # логин
         # self.passEdit
         self.close()
 
@@ -72,7 +72,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         try:
             if True:  # Проверка, что пользователь есть в базе
                 self.is_found = True
-                if False:  # Проверка, что пользователь это админ
+                if self.loginEdit.text() == 'login' or self.passEdit.text() == 'password':  # Проверка, что пользователь это админ
                     self.is_admin = True
         except Exception as ex:
             QMessageBox.warning(self, 'Ошибка', 'Пользователь не найден')
@@ -91,7 +91,7 @@ class AddDialog(QDialog, Ui_AddDialog):
         # TODO Добавить фильм
         if self.check_fields():
             try:
-                pass #ЗАПРОС ТУТ
+                pass  # ЗАПРОС ТУТ
                 self.is_added = True
             except Exception as ex:
                 QMessageBox.warning(self, 'Ошибка', f'{ex}')
@@ -118,7 +118,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
         if self.check_fields():
             try:
                 # TODO Удалить фильм
-                #Нйти, если нашел то удалить и вернуть флаг true, иначе false
+                # Нйти, если нашел то удалить и вернуть флаг true, иначе false
                 self.is_deleted = True
                 pass
             except Exception as ex:
@@ -134,14 +134,18 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
 
 # pyuic6 -x sub_dialog.ui -o sub_dialog.py
 class SubDialog(QDialog, Ui_SubDialog):
-    def __init__(self, parent=None):
+    def __init__(self, login, password, parent=None):
         super().__init__(parent)
+        self.login = login
+        self.password = password
         self.setupUi(self)
         self.buyButton.clicked.connect(self.buyButtonClicked)
         self.buyButton_2.clicked.connect(self.buyButtonClicked)
         self.buyButton_3.clicked.connect(self.buyButtonClicked)
+        self.hasSubscribtion = False
 
     def buyButtonClicked(self):
+        self.hasSubscribtion = True
         QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
 
 
@@ -152,11 +156,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.rowCount = 995 #???
+        self.rowCount = 995  # ???
         self.addButton.hide()
         self.delButton.hide()
         self.database = Database()
-        #self.connectDB()
+        # self.connectDB()
         self.tableWidget.setColumnWidth(0, 133)  # name
         self.tableWidget.setColumnWidth(1, 133)  # year
         self.tableWidget.setColumnWidth(2, 133)  # country
@@ -169,7 +173,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.likeButton.hide()
 
         self.in_Account = True
-        self.sub_enabled = False
 
         self.loadButton.clicked.connect(self.loadDB)  # Загрузить
         self.loginButton.clicked.connect(self.loginButtonClicked)  # Войти
@@ -181,11 +184,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.outButton.clicked.connect(self.outButtonClicked)  # Выйти
         self.likeButton.clicked.connect(self.likeButtonClicked)  # Избранное
 
+        self.login = ''
+        self.password = ''
+
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
         log_d.exec()
-        login = log_d.loginEdit.text()
-        password = log_d.passEdit.text()
+        self.login = log_d.loginEdit.text()
+        self.password = log_d.passEdit.text()
         admin = False
         if log_d.is_found:
             # скип говно # TODO Узнать пользователь или админ
@@ -198,11 +204,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.loginButton.hide()
             self.outButton.show()
 
-    def findButtonClicked(self):        
+    def findButtonClicked(self):
         find_d = FindDialog(self)
         find_d.exec()
-        #TODO поиск 
-        name = find_d.findEdit.text # это то что в строке
+        # TODO поиск
+        name = find_d.findEdit.text  # это то что в строке
 
     def addButtonClicked(self):
         add_d = AddDialog(self)
@@ -220,21 +226,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # TODO Узнать о подписке пользователя
     def subButtonClicked(self):
-        #ТУТ ПИСАТЬ ЕСТЬ ЛИ ПОДПИСКА         
-        sub_d = SubDialog(self)
-        sub_d.exec()        
-
+        # ТУТ ПИСАТЬ ЕСТЬ ЛИ ПОДПИСКА
+        sub_d = SubDialog(login=self.login, password=self.password, parent=self)
+        sub_d.exec()
 
     def likeButtonClicked(self):
         pass
-        #TODO вывести избранное
+        # TODO вывести избранное
 
     def loadDB(self):
-        try: 
+        try:
             films = self.database.getAllFilms()
             self.tableWidget.setRowCount(self.rowCount)
-            i = 0           
-            for row in films: 
+            i = 0
+            for row in films:
 
                 counries = ''
                 for cur in self.database.getFilmCountries(row[0]):
@@ -247,7 +252,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 directors = ''
                 for cur in self.database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
-                
+
                 self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
                 self.tableWidget.setItem(i, 2, QTableWidgetItem(counries[:-2]))  # countries
@@ -255,7 +260,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
                 self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
-            
+
             # self.connection.commit()
             self.tableWidget.setColumnWidth(0, 275)  # name
             self.tableWidget.setColumnWidth(1, 5)  # year
@@ -280,10 +285,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #         print('Connection failed')
     #         print(ex)
 
-    # def closeEvent(self, event):
-    #     if self.connection is not None:
-    #         self.connection.close()
-    #     sys.exit()
+    # это нельзя комментить!!!
+    def closeEvent(self, event):
+        if self.database is not None:
+            self.database.close()
+        sys.exit()
 
     def outButtonClicked(self):
         self.addButton.hide()
