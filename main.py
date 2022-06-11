@@ -7,9 +7,7 @@ from add_dialog import Ui_AddDialog
 from delete_dialog import Ui_DeleteDialog
 from sub_dialog import Ui_SubDialog
 from reg_dialog import Ui_RegDialog
-
-import pymysql
-
+import mysql.connector
 
 # pyuic6 -x find_dialog.ui -o find_dialog.py
 
@@ -37,6 +35,8 @@ class RegDialog(QDialog, Ui_RegDialog):
 
     def regButtonClicked(self):
         # TODO зарегистрировать пользователя
+        #self.loginEdit.text # логин
+        # self.passEdit
         self.close()
 
 
@@ -70,7 +70,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         try:
             if True:  # Проверка, что пользователь есть в базе
                 self.is_found = True
-                if True:  # Проверка, что пользователь это админ
+                if False:  # Проверка, что пользователь это админ
                     self.is_admin = True
         except Exception as ex:
             QMessageBox.warning(self, 'Ошибка', 'Пользователь не найден')
@@ -89,10 +89,10 @@ class AddDialog(QDialog, Ui_AddDialog):
         # TODO Добавить фильм
         if self.check_fields():
             try:
-                pass
+                pass #ЗАПРОС ТУТ
                 self.is_added = True
             except Exception as ex:
-                pass
+                QMessageBox.warning(self, 'Ошибка', f'{ex}')
             finally:
                 self.close()
         else:
@@ -116,6 +116,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
         if self.check_fields():
             try:
                 # TODO Удалить фильм
+                #Нйти, если нашел то удалить и вернуть флаг true, иначе false
                 self.is_deleted = True
                 pass
             except Exception as ex:
@@ -185,9 +186,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         log_d.exec()
         login = log_d.loginEdit.text()
         password = log_d.passEdit.text()
-        admin = True
+        admin = False
         if log_d.is_found:
-            # TODO Узнать пользователь или админ
+            # скип говно # TODO Узнать пользователь или админ
             if log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
@@ -197,9 +198,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.loginButton.hide()
             self.outButton.show()
 
-    def findButtonClicked(self):
+    def findButtonClicked(self):        
         find_d = FindDialog(self)
         find_d.exec()
+        #TODO поиск 
+        name = find_d.findEdit.text # это то что в строке
 
     def addButtonClicked(self):
         add_d = AddDialog(self)
@@ -217,11 +220,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # TODO Узнать о подписке пользователя
     def subButtonClicked(self):
+        #ТУТ ПИСАТЬ ЕСТЬ ЛИ ПОДПИСКА         
         sub_d = SubDialog(self)
-        sub_d.exec()
+        sub_d.exec()        
 
     def likeButtonClicked(self):
         pass
+        #TODO вывести избранное
 
     def loadDB(self):
 
@@ -233,7 +238,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 cur.execute(get_data_query)
                 self.tableWidget.setRowCount(self.rowCount)
                 for row in cur.fetchall():
-                    self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[3])))  # name
+                    # сюда вставлять столбцы
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[1])))  # title
+                    self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
+                    self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rating
                     i += 1
                 # self.connection.commit()
                 self.tableWidget.setColumnWidth(0, 275)  # name
@@ -250,12 +258,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def connectDB(self):
         try:
-            self.connection = pymysql.connect(
-                host='localhost',
-                port=3306,
-                user='root',
-                password='your_password',
-                database='filmoteka'
+            self.connection = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                passwd="password",
+                database="filmoteka"
             )
         except Exception as ex:
             print('Connection failed')
