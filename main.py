@@ -6,6 +6,7 @@ from find_dialog import Ui_FindDialog
 from add_dialog import Ui_AddDialog
 from delete_dialog import Ui_DeleteDialog
 from sub_dialog import Ui_SubDialog
+from reg_dialog import Ui_RegDialog
 
 import pymysql
 
@@ -25,6 +26,20 @@ class FindDialog(QDialog, Ui_FindDialog):
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
 
+# pyuic6 -x reg_dialog.ui -o reg_dialog.py
+
+class RegDialog(QDialog, Ui_RegDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.regButton.clicked.connect(self.regButtonClicked)
+
+
+    def regButtonClicked(self):
+        # TODO зарегистрировать пользователя
+        self.close()
+
+
 # pyuic6 -x login_dialog.ui -o login_dialog.py
 
 class LoginDialog(QDialog, Ui_LoginDialog):
@@ -32,8 +47,13 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.logButton.clicked.connect(self.logButtonClicked)
+        self.regButton.clicked.connect(self.regButtonClicked)
         self.is_found = False
         self.is_admin = False
+
+    def regButtonClicked(self):
+        reg_d = RegDialog()
+        reg_d.exec()
 
     def logButtonClicked(self):
         if self.check_fields():
@@ -66,7 +86,7 @@ class AddDialog(QDialog, Ui_AddDialog):
         self.is_added = False
 
     def addButtonClicked(self):
-        # TODO
+        # TODO Добавить фильм
         if self.check_fields():
             try:
                 pass
@@ -95,7 +115,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
     def deleteButtonClicked(self):
         if self.check_fields():
             try:
-                # TODO sql
+                # TODO Удалить фильм
                 self.is_deleted = True
                 pass
             except Exception as ex:
@@ -122,7 +142,6 @@ class SubDialog(QDialog, Ui_SubDialog):
         QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
 
 
-# pyuic6 -x reg_dialog.ui -o reg_dialog.py
 
 
 # pyuic6 -x main_window.ui -o main_window.py
@@ -159,7 +178,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.subButton.clicked.connect(self.subButtonClicked)  # Подписка
         self.outButton.clicked.connect(self.outButtonClicked)  # Выйти
-        self.likeButton.clicked.connect(self.likeButtonClicked) # Избранное
+        self.likeButton.clicked.connect(self.likeButtonClicked)  # Избранное
 
     def loginButtonClicked(self):
         log_d = LoginDialog(self)
@@ -168,11 +187,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         password = log_d.passEdit.text()
         admin = True
         if log_d.is_found:
+            # TODO Узнать пользователь или админ
             if log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
             else:
-                # TODO
                 self.subButton.show()
                 self.likeButton.show()
             self.loginButton.hide()
@@ -193,11 +212,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         del_d = DeleteDialog(self)
         del_d.exec()
         if del_d.is_deleted:
-            # TODO
             self.rowCount -= 1
             self.loadDB()
 
-    # TODO
+    # TODO Узнать о подписке пользователя
     def subButtonClicked(self):
         sub_d = SubDialog(self)
         sub_d.exec()
@@ -206,9 +224,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
 
     def loadDB(self):
-        # TODO
+
         try:
             with self.connection.cursor() as cur:
+                # TODO Нужен нормальный запрос на фильмы
                 get_data_query = 'SELECT * FROM film'
                 i = 0
                 cur.execute(get_data_query)
@@ -235,7 +254,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 host='localhost',
                 port=3306,
                 user='root',
-                password='****!',
+                password='your_password',
                 database='filmoteka'
             )
         except Exception as ex:
