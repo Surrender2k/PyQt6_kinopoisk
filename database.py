@@ -45,5 +45,30 @@ class Database:
 		self.cursor.execute(query)
 		return len(self.cursor.fetchall()) != 0
 
+	def addFilm(self, title, year, rate, countries, categories, directors):
+		query = f'INSERT INTO film(title, year, rate) VALUES (\'{title}\', {year}, {rate})'
+		self.cursor.execute(query)
+		filmId = self.cursor.lasrrowid
+
+		for countryName in countries: 
+			self.addFilmHasCountry(filmId, countryName)
+
+		for categoryName in categories: 
+			self.addFilmHasCountry(filmId, categoryName)
+		
+		for directorName in directors: 
+			self.addFilmHasCountry(filmId, directorName)
+		
+		self.db.commit()
+
+	def addFilmHasCountry(self, filmId, countryName):
+		pass
+
+	def addFilmHasCategory(self, filmId, categoryName):
+		pass
+
+	def addFilmHasDirector(self, filmId, directorName):
+		pass
+
 	def close(self):
 		self.db.close()

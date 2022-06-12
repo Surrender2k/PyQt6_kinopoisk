@@ -72,6 +72,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
             password = self.passEdit.text()
             if login == 'admin' and password == 'admin':
                 self.is_admin = True
+                self.is_found = True
             elif database.findUser(login, password):                
                 self.is_found = True
             else: 
@@ -94,8 +95,17 @@ class AddDialog(QDialog, Ui_AddDialog):
         # TODO Добавить фильм
         if self.check_fields():
             try:
-                pass  # ЗАПРОС ТУТ
+                title = self.nameEdit.text()
+                year = int(self.yearEdit.text())
+                countries = self.countryEdit.text().split(', ')
+                categories = self.genreEdit.text().split(', ')
+                directors = self.directorEdit.text().split(', ')
+                rate = float(self.ratingEdit.text())
+
+                
+
                 self.is_added = True
+                
             except Exception as ex:
                 QMessageBox.warning(self, 'Ошибка', f'{ex}')
             finally:
