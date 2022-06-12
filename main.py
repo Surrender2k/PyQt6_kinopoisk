@@ -161,8 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.rowCount = 995  # ???
         self.addButton.hide()
-        self.delButton.hide()
-        #self.database = Database()        
+        self.delButton.hide()               
         self.tableWidget.setColumnWidth(0, 133)  # name
         self.tableWidget.setColumnWidth(1, 133)  # year
         self.tableWidget.setColumnWidth(2, 133)  # country
