@@ -9,10 +9,10 @@ from add_dialog import Ui_AddDialog
 from delete_dialog import Ui_DeleteDialog
 from sub_dialog import Ui_SubDialog
 from reg_dialog import Ui_RegDialog
-import mysql.connector
-
 
 # pyuic6 -x find_dialog.ui -o find_dialog.py
+
+database = Database()
 
 class FindDialog(QDialog, Ui_FindDialog):
     def __init__(self, parent=None):
@@ -36,11 +36,10 @@ class RegDialog(QDialog, Ui_RegDialog):
         self.regButton.clicked.connect(self.regButtonClicked)
 
     def regButtonClicked(self):
-        # TODO зарегистрировать пользователя
-        # self.loginEdit.text # логин
-        # self.passEdit
+        login = self.loginEdit.text()
+        password = self.passEdit.text()             
+        database.addUser(login, password)        
         self.close()
-
 
 # pyuic6 -x login_dialog.ui -o login_dialog.py
 
@@ -51,7 +50,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         self.logButton.clicked.connect(self.logButtonClicked)
         self.regButton.clicked.connect(self.regButtonClicked)
         self.is_found = False
-        self.is_admin = False
+        self.is_admin = False        
 
     def regButtonClicked(self):
         reg_d = RegDialog()
@@ -67,15 +66,19 @@ class LoginDialog(QDialog, Ui_LoginDialog):
     def check_fields(self):
         return not (self.loginEdit.text() == '' or self.passEdit.text() == '')
 
-    def find(self):
-        # TODO SQL найти пользователя по логину и паролю и определить админ это или пользователь
+    def find(self):        
         try:
-            if True:  # Проверка, что пользователь есть в базе
+            login = self.loginEdit.text()
+            password = self.passEdit.text()
+            if login == 'admin' and password == 'admin':
+                self.is_admin = True
+            elif database.findUser(login, password):                
                 self.is_found = True
-                if self.loginEdit.text() == 'login' or self.passEdit.text() == 'password':  # Проверка, что пользователь это админ
-                    self.is_admin = True
+            else: 
+                QMessageBox.warning(self, 'Ошибка', 'Не верный логин или пароль')
+
         except Exception as ex:
-            QMessageBox.warning(self, 'Ошибка', 'Пользователь не найден')
+            QMessageBox.warning(self, 'Ошибка', 'Всё сломалось')
 
 
 # pyuic6 -x add_dialog.ui -o add_dialog.py
@@ -159,8 +162,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.rowCount = 995  # ???
         self.addButton.hide()
         self.delButton.hide()
-        self.database = Database()
-        # self.connectDB()
+        #self.database = Database()        
         self.tableWidget.setColumnWidth(0, 133)  # name
         self.tableWidget.setColumnWidth(1, 133)  # year
         self.tableWidget.setColumnWidth(2, 133)  # country
@@ -236,21 +238,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def loadDB(self):
         try:
-            films = self.database.getAllFilms()
+            films = database.getAllFilms()
             self.tableWidget.setRowCount(self.rowCount)
             i = 0
             for row in films:
 
                 counries = ''
-                for cur in self.database.getFilmCountries(row[0]):
+                for cur in database.getFilmCountries(row[0]):
                     counries += cur[0] + ', '
 
                 genres = ''
-                for cur in self.database.getFilmCategories(row[0]):
+                for cur in database.getFilmCategories(row[0]):
                     genres += cur[0] + ', '
 
                 directors = ''
-                for cur in self.database.getFilmDirectors(row[0]):
+                for cur in database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
 
                 self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
@@ -260,13 +262,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
                 self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
-
-            # self.connection.commit()
-            self.tableWidget.setColumnWidth(0, 275)  # name
+            
+            self.tableWidget.setColumnWidth(0, 275)  # title
             self.tableWidget.setColumnWidth(1, 5)  # year
-            self.tableWidget.setColumnWidth(2, 133)  # country
-            self.tableWidget.setColumnWidth(3, 133)  # genre
-            self.tableWidget.setColumnWidth(4, 133)  # director
+            self.tableWidget.setColumnWidth(2, 133)  # countries
+            self.tableWidget.setColumnWidth(3, 133)  # genres
+            self.tableWidget.setColumnWidth(4, 133)  # directors
             self.tableWidget.setColumnWidth(5, 10)  # rate
 
         except Exception as ex:
