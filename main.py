@@ -91,8 +91,7 @@ class AddDialog(QDialog, Ui_AddDialog):
         self.addButton.clicked.connect(self.addButtonClicked)
         self.is_added = False
 
-    def addButtonClicked(self):
-        # TODO Добавить фильм
+    def addButtonClicked(self):        
         if self.check_fields():
             try:
                 title = self.nameEdit.text()
@@ -101,9 +100,7 @@ class AddDialog(QDialog, Ui_AddDialog):
                 categories = self.genreEdit.text().split(', ')
                 directors = self.directorEdit.text().split(', ')
                 rate = float(self.ratingEdit.text())
-
-                
-
+                database.addFilm(title, year, rate, countries, categories, directors)
                 self.is_added = True
                 
             except Exception as ex:
@@ -169,7 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.rowCount = 995  # ???
+        self.rowCount = 1000  # ???
         self.addButton.hide()
         self.delButton.hide()               
         self.tableWidget.setColumnWidth(0, 133)  # name

@@ -1,3 +1,4 @@
+import code
 import mysql.connector
 
 class Database:
@@ -48,27 +49,56 @@ class Database:
 	def addFilm(self, title, year, rate, countries, categories, directors):
 		query = f'INSERT INTO film(title, year, rate) VALUES (\'{title}\', {year}, {rate})'
 		self.cursor.execute(query)
-		filmId = self.cursor.lasrrowid
+		self.db.commit()
+		filmId = self.cursor.lastrowid
 
 		for countryName in countries: 
 			self.addFilmHasCountry(filmId, countryName)
 
 		for categoryName in categories: 
-			self.addFilmHasCountry(filmId, categoryName)
+			self.addFilmHasCategory(filmId, categoryName)
 		
-		for directorName in directors: 
-			self.addFilmHasCountry(filmId, directorName)
-		
+		for directorName in directors:
+			self.addFilmHasDirector(filmId, directorName)
+	
+	def addFilmHasCountry(self, filmId, countryName):
+		# insert new country if not exists
+		query = f'SELECT name FROM country WHERE name = \'{countryName}\''
+		self.cursor.execute(query)		
+		if len(self.cursor.fetchall()) == 0:
+			query = f'INSERT INTO country(name) VALUES(\'{countryName}\')'
+			self.cursor.execute(query)			
+
+		# add new film has country
+		query = f'INSERT INTO film_has_country(film_id, country_name) VALUES({filmId}, \'{countryName}\')'
+		self.cursor.execute(query)
 		self.db.commit()
 
-	def addFilmHasCountry(self, filmId, countryName):
-		pass
-
 	def addFilmHasCategory(self, filmId, categoryName):
-		pass
+		# insert new category if not exists
+		query = f'SELECT name FROM category WHERE name = \'{categoryName}\''
+		self.cursor.execute(query)		
+		if len(self.cursor.fetchall()) == 0:
+			query = f'INSERT INTO category(name) VALUES(\'{categoryName}\')'
+			self.cursor.execute(query)			
+
+		# add new film has category
+		query = f'INSERT INTO film_has_category(film_id, category_name) VALUES({filmId}, \'{categoryName}\')'
+		self.cursor.execute(query)
+		self.db.commit()
 
 	def addFilmHasDirector(self, filmId, directorName):
-		pass
+		# insert new director if not exists
+		query = f'SELECT name FROM director WHERE name = \'{directorName}\''
+		self.cursor.execute(query)		
+		if len(self.cursor.fetchall()) == 0:
+			query = f'INSERT INTO director(name) VALUES(\'{directorName}\')'
+			self.cursor.execute(query)			
+
+		# add new film has category
+		query = f'INSERT INTO film_has_director(film_id, director_name) VALUES({filmId}, \'{directorName}\')'
+		self.cursor.execute(query)
+		self.db.commit()
 
 	def close(self):
 		self.db.close()
