@@ -100,5 +100,27 @@ class Database:
 		self.cursor.execute(query)
 		self.db.commit()
 
+	def removeFilm(self, filmId):
+		pass
+
+	def findAny(self, target):
+		query = f'SELECT id, title, year, rate FROM film WHERE title = \'{target}\' OR year = \'{target}\''
+		self.cursor.execute(query)
+		result = self.cursor.fetchall()
+
+		query = f'SELECT id, title, year, rate FROM film, film_has_country WHERE film_has_country.film_id = film.id AND film_has_country.country_name = \'{target}\''
+		self.cursor.execute(query)
+		result += self.cursor.fetchall()
+
+		query = f'SELECT id, title, year, rate FROM film, film_has_category WHERE film_has_category.film_id = film.id AND film_has_category.category_name = \'{target}\''
+		self.cursor.execute(query)
+		result += self.cursor.fetchall()
+
+		query = f'SELECT id, title, year, rate FROM film, film_has_director WHERE film_has_director.film_id = film.id AND film_has_director.director_name = \'{target}\''
+		self.cursor.execute(query)
+		result += self.cursor.fetchall()
+
+		return result
+
 	def close(self):
 		self.db.close()

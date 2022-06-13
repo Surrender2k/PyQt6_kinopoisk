@@ -127,7 +127,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
     def deleteButtonClicked(self):
         if self.check_fields():
             try:
-                # TODO Удалить фильм
+                # TODO Удалить фильм UPD: Нельзя удалять по названию. Как тогда удалять?
                 # Нйти, если нашел то удалить и вернуть флаг true, иначе false
                 self.is_deleted = True
                 pass
@@ -165,8 +165,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setupUi(self)
-        self.rowCount = 1000  # ???
+        self.setupUi(self)        
         self.addButton.hide()
         self.delButton.hide()               
         self.tableWidget.setColumnWidth(0, 133)  # name
@@ -202,7 +201,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.password = log_d.passEdit.text()
         admin = False
         if log_d.is_found:
-            # скип говно # TODO Узнать пользователь или админ
+            # TODO Узнать пользователь или админ UPD: ЗАЧЕМ?
             if log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
@@ -214,38 +213,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def findButtonClicked(self):
         find_d = FindDialog(self)
-        find_d.exec()
-        # TODO поиск
-        name = find_d.findEdit.text  # это то что в строке
-
-    def addButtonClicked(self):
-        add_d = AddDialog(self)
-        add_d.exec()
-        if add_d.is_added:
-            self.rowCount += 1
-            self.loadDB()
-
-    def delButtonClicked(self):
-        del_d = DeleteDialog(self)
-        del_d.exec()
-        if del_d.is_deleted:
-            self.rowCount -= 1
-            self.loadDB()
-
-    # TODO Узнать о подписке пользователя
-    def subButtonClicked(self):
-        # ТУТ ПИСАТЬ ЕСТЬ ЛИ ПОДПИСКА
-        sub_d = SubDialog(login=self.login, password=self.password, parent=self)
-        sub_d.exec()
-
-    def likeButtonClicked(self):
-        pass
-        # TODO вывести избранное
-
-    def loadDB(self):
+        find_d.exec()        
+        target = find_d.findEdit.text()
+        
         try:
-            films = database.getAllFilms()
-            self.tableWidget.setRowCount(self.rowCount)
+            films = database.findAny(target)
+            if (len(films) == 0):
+                QMessageBox.information(self, 'Поиск', 'По вашему запросу ничего не найдено')
+                return
+            self.tableWidget.setRowCount(len(films))
             i = 0
             for row in films:
 
@@ -277,7 +253,67 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget.setColumnWidth(5, 10)  # rate
 
         except Exception as ex:
-            QMessageBox.information(self, 'Ошибка', 'Подключение к базе данных не удалось')
+            QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
+            print(ex)
+
+    def addButtonClicked(self):
+        add_d = AddDialog(self)
+        add_d.exec()
+        if add_d.is_added:            
+            self.loadDB()
+
+    def delButtonClicked(self):
+        del_d = DeleteDialog(self)
+        del_d.exec()
+        if del_d.is_deleted:            
+            self.loadDB()
+
+    # TODO Узнать о подписке пользователя
+    def subButtonClicked(self):
+        # ТУТ ПИСАТЬ ЕСТЬ ЛИ ПОДПИСКА
+        sub_d = SubDialog(login=self.login, password=self.password, parent=self)
+        sub_d.exec()
+
+    def likeButtonClicked(self):
+        pass
+        # TODO вывести избранное
+
+    def loadDB(self):
+        try:    
+            films = database.getAllFilms()        
+            self.tableWidget.setRowCount(len(films))
+            i = 0
+            for row in films:
+
+                counries = ''
+                for cur in database.getFilmCountries(row[0]):
+                    counries += cur[0] + ', '
+
+                genres = ''
+                for cur in database.getFilmCategories(row[0]):
+                    genres += cur[0] + ', '
+
+                directors = ''
+                for cur in database.getFilmDirectors(row[0]):
+                    directors += cur[0] + ', '
+
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(counries[:-2]))  # countries
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(genres[:-2]))  # genres
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
+                i += 1
+            
+            self.tableWidget.setColumnWidth(0, 275)  # title
+            self.tableWidget.setColumnWidth(1, 5)  # year
+            self.tableWidget.setColumnWidth(2, 133)  # countries
+            self.tableWidget.setColumnWidth(3, 133)  # genres
+            self.tableWidget.setColumnWidth(4, 133)  # directors
+            self.tableWidget.setColumnWidth(5, 10)  # rate
+
+        except Exception as ex:
+            QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
             print(ex)
 
     # def connectDB(self):
