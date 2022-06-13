@@ -73,6 +73,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
             if login == 'admin' and password == 'admin':
                 self.is_admin = True
                 self.is_found = True
+                # TODO UPD: вот тут нужно запоминать логин текущего юзера (на 5 строк выше по коду)
             elif database.findUser(login, password):                
                 self.is_found = True
             else: 
@@ -199,9 +200,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         log_d.exec()
         self.login = log_d.loginEdit.text()
         self.password = log_d.passEdit.text()
-        admin = False
+        
         if log_d.is_found:
-            # TODO Узнать пользователь или админ UPD: ЗАЧЕМ?
+
             if log_d.is_admin:
                 self.addButton.show()
                 self.delButton.show()
@@ -218,9 +219,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         try:
             films = database.findAny(target)
+
             if (len(films) == 0):
                 QMessageBox.information(self, 'Поиск', 'По вашему запросу ничего не найдено')
                 return
+
             self.tableWidget.setRowCount(len(films))
             i = 0
             for row in films:
@@ -267,16 +270,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         del_d.exec()
         if del_d.is_deleted:            
             self.loadDB()
-
-    # TODO Узнать о подписке пользователя
+    
     def subButtonClicked(self):
-        # ТУТ ПИСАТЬ ЕСТЬ ЛИ ПОДПИСКА
+        # TODO Узнать о подписке пользователя 
+        # UPD: узнал, и что дальше?
+        isSubscriber = database.isSubscriber(self.login)
+
         sub_d = SubDialog(login=self.login, password=self.password, parent=self)
         sub_d.exec()
 
     def likeButtonClicked(self):
         pass
         # TODO вывести избранное
+        # UPD: для начала нужен функционал добавления в избранное
 
     def loadDB(self):
         try:    
@@ -316,19 +322,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
             print(ex)
 
-    # def connectDB(self):
-    #     try:
-    #         self.connection = mysql.connector.connect(
-    #             host="localhost",
-    #             user="root",
-    #             passwd="password",
-    #             database="filmoteka"
-    #         )
-    #     except Exception as ex:
-    #         print('Connection failed')
-    #         print(ex)
-
-    # это нельзя комментить!!!
     def closeEvent(self, event):
         if self.database is not None:
             self.database.close()

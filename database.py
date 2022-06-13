@@ -118,9 +118,14 @@ class Database:
 
 		query = f'SELECT id, title, year, rate FROM film, film_has_director WHERE film_has_director.film_id = film.id AND film_has_director.director_name = \'{target}\''
 		self.cursor.execute(query)
-		result += self.cursor.fetchall()
+		result += self.cursor.fetchall()		
 
 		return result
+
+	def isSubscriber(self, login):
+		query = f'SELECT * FROM user WHERE login = \'{login}\' AND subscription_id IS NOT NULL'
+		self.cursor.execute(query)
+		return len(self.cursor.fetchall()) != 0
 
 	def close(self):
 		self.db.close()
