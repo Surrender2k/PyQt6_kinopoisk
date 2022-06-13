@@ -14,6 +14,7 @@ from reg_dialog import Ui_RegDialog
 
 database = Database()
 
+
 class FindDialog(QDialog, Ui_FindDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -37,9 +38,10 @@ class RegDialog(QDialog, Ui_RegDialog):
 
     def regButtonClicked(self):
         login = self.loginEdit.text()
-        password = self.passEdit.text()             
-        database.addUser(login, password)        
+        password = self.passEdit.text()
+        database.addUser(login, password)
         self.close()
+
 
 # pyuic6 -x login_dialog.ui -o login_dialog.py
 
@@ -50,7 +52,10 @@ class LoginDialog(QDialog, Ui_LoginDialog):
         self.logButton.clicked.connect(self.logButtonClicked)
         self.regButton.clicked.connect(self.regButtonClicked)
         self.is_found = False
-        self.is_admin = False        
+        self.is_admin = False
+
+        self.login = ''
+        self.password = ''
 
     def regButtonClicked(self):
         reg_d = RegDialog()
@@ -66,17 +71,17 @@ class LoginDialog(QDialog, Ui_LoginDialog):
     def check_fields(self):
         return not (self.loginEdit.text() == '' or self.passEdit.text() == '')
 
-    def find(self):        
+    def find(self):
         try:
-            login = self.loginEdit.text()
-            password = self.passEdit.text()
-            if login == 'admin' and password == 'admin':
+            self.login = self.loginEdit.text()
+            self.password = self.passEdit.text()
+            if self.login == 'admin' and self.password == 'admin':
                 self.is_admin = True
                 self.is_found = True
-                # TODO UPD: вот тут нужно запоминать логин текущего юзера (на 5 строк выше по коду)
-            elif database.findUser(login, password):                
+                # TODO UPD: вот тут нужно запоминать логин текущего юзера (на 5 строк выше по коду) (сделал поля логин и пароль, дальше к ним обращаешься)
+            elif database.findUser(self.login, self.password):
                 self.is_found = True
-            else: 
+            else:
                 QMessageBox.warning(self, 'Ошибка', 'Не верный логин или пароль')
 
         except Exception as ex:
@@ -92,7 +97,7 @@ class AddDialog(QDialog, Ui_AddDialog):
         self.addButton.clicked.connect(self.addButtonClicked)
         self.is_added = False
 
-    def addButtonClicked(self):        
+    def addButtonClicked(self):
         if self.check_fields():
             try:
                 title = self.nameEdit.text()
@@ -103,7 +108,7 @@ class AddDialog(QDialog, Ui_AddDialog):
                 rate = float(self.ratingEdit.text())
                 database.addFilm(title, year, rate, countries, categories, directors)
                 self.is_added = True
-                
+
             except Exception as ex:
                 QMessageBox.warning(self, 'Ошибка', f'{ex}')
             finally:
@@ -128,7 +133,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
     def deleteButtonClicked(self):
         if self.check_fields():
             try:
-                # TODO Удалить фильм UPD: Нельзя удалять по названию. Как тогда удалять?
+                # TODO Удалить фильм UPD: Нельзя удалять по названию. Как тогда удалять? (В душе не ебу, твоя задача)
                 # Нйти, если нашел то удалить и вернуть флаг true, иначе false
                 self.is_deleted = True
                 pass
@@ -166,9 +171,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setupUi(self)        
+        self.setupUi(self)
         self.addButton.hide()
-        self.delButton.hide()               
+        self.delButton.hide()
         self.tableWidget.setColumnWidth(0, 133)  # name
         self.tableWidget.setColumnWidth(1, 133)  # year
         self.tableWidget.setColumnWidth(2, 133)  # country
@@ -200,7 +205,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         log_d.exec()
         self.login = log_d.loginEdit.text()
         self.password = log_d.passEdit.text()
-        
+
         if log_d.is_found:
 
             if log_d.is_admin:
@@ -214,9 +219,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def findButtonClicked(self):
         find_d = FindDialog(self)
-        find_d.exec()        
+        find_d.exec()
         target = find_d.findEdit.text()
-        
+
         try:
             films = database.findAny(target)
 
@@ -247,7 +252,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
                 self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
-            
+
             self.tableWidget.setColumnWidth(0, 275)  # title
             self.tableWidget.setColumnWidth(1, 5)  # year
             self.tableWidget.setColumnWidth(2, 133)  # countries
@@ -262,15 +267,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def addButtonClicked(self):
         add_d = AddDialog(self)
         add_d.exec()
-        if add_d.is_added:            
+        if add_d.is_added:
             self.loadDB()
 
     def delButtonClicked(self):
         del_d = DeleteDialog(self)
         del_d.exec()
-        if del_d.is_deleted:            
+        if del_d.is_deleted:
             self.loadDB()
-    
+
     def subButtonClicked(self):
         # TODO Узнать о подписке пользователя 
         # UPD: узнал, и что дальше?
@@ -285,8 +290,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # UPD: для начала нужен функционал добавления в избранное
 
     def loadDB(self):
-        try:    
-            films = database.getAllFilms()        
+        try:
+            films = database.getAllFilms()
             self.tableWidget.setRowCount(len(films))
             i = 0
             for row in films:
@@ -310,7 +315,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
                 self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
-            
+
             self.tableWidget.setColumnWidth(0, 275)  # title
             self.tableWidget.setColumnWidth(1, 5)  # year
             self.tableWidget.setColumnWidth(2, 133)  # countries
@@ -323,8 +328,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print(ex)
 
     def closeEvent(self, event):
-        if self.database is not None:
-            self.database.close()
+        # if self.database is not None:
+        #     self.database.close()
         sys.exit()
 
     def outButtonClicked(self):
