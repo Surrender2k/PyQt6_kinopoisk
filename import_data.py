@@ -21,6 +21,8 @@ synonims = {
     "СССР" : { "Советский Союз", "Советский" }
 }
 
+mycursor.execute("INSERT INTO user(login, password) VALUES (\'admin\', \'admin\')")
+
 with open("data.csv", "r", newline="") as csvfile:
     reader = csv.DictReader(csvfile, delimiter=";")
     for row in reader:

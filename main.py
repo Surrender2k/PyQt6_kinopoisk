@@ -56,7 +56,9 @@ class RegDialog(QDialog, Ui_RegDialog):
     def regButtonClicked(self):
         login = self.loginEdit.text()
         password = self.passEdit.text()
-        database.addUser(login, password)
+        isUserAdded = database.addUser(login, password)
+        if not isUserAdded:
+            QMessageBox.warning(self, 'Ошибка', 'Этот логин занят!')
         self.close()
 
 
@@ -94,8 +96,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
             self.password = self.passEdit.text()
             if self.login == 'admin' and self.password == 'admin':
                 self.is_admin = True
-                self.is_found = True
-                # TODO UPD: вот тут нужно запоминать логин текущего юзера (на 5 строк выше по коду) (сделал поля логин и пароль, дальше к ним обращаешься)
+                self.is_found = True                
             elif database.findUser(self.login, self.password):
                 self.is_found = True
             else:
@@ -122,8 +123,8 @@ class AddDialog(QDialog, Ui_AddDialog):
                 countries = self.countryEdit.text().split(', ')
                 categories = self.genreEdit.text().split(', ')
                 directors = self.directorEdit.text().split(', ')
-                rate = float(self.ratingEdit.text())
-                database.addFilm(title, year, rate, countries, categories, directors)
+                rate = float(self.ratingEdit.text()) 
+                database.addFilm(title, year, rate, countries, categories, directors)               
                 self.is_added = True
 
             except Exception as ex:
@@ -149,13 +150,12 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
 
     def deleteButtonClicked(self):
         if self.check_fields():
-            try:
-                # TODO Удалить фильм UPD: Нельзя удалять по названию. Как тогда удалять? (В душе не ебу, твоя задача)
-                # Нйти, если нашел то удалить и вернуть флаг true, иначе false
-                self.is_deleted = True
-                pass
+            try:         
+                filmId = self.deleteEdit.text()       
+                self.is_deleted = database.deleteFilm(filmId)   
+                # TODO: добавить форму "Фильм удалён"             
             except Exception as ex:
-                QMessageBox.warning(self, 'Ошибка', 'Фильм не найден')
+                QMessageBox.warning(self, 'Ошибка', 'Запись не найдена')
             finally:
                 self.close()
         else:
@@ -164,8 +164,8 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
     def check_fields(self):
         return not (self.deleteEdit.text() == '')
 
-
 # pyuic6 -x sub_dialog.ui -o sub_dialog.py
+
 class SubDialog(QDialog, Ui_SubDialog):
     def __init__(self, login, password, parent=None):
         super().__init__(parent)
@@ -199,7 +199,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget.setColumnWidth(5, 133)  # director
         self.tableWidget.setColumnWidth(6, 112)  # rate
         self.tableWidget.verticalHeader().setVisible(False)
-
 
         self.subButton.hide()
         self.outButton.hide()
@@ -242,49 +241,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         find_d.exec()
         target = find_d.findEdit.text()
 
-        try:
-            films = database.findAny(target)
+        if target != '':
+            try:
+                films = database.findAny(target)
 
-            if (len(films) == 0):
-                QMessageBox.information(self, 'Поиск', 'По вашему запросу ничего не найдено')
-                return
+                if (len(films) == 0):
+                    QMessageBox.information(self, 'Поиск', 'По вашему запросу ничего не найдено')
+                    return
 
-            self.tableWidget.setRowCount(len(films))
-            i = 0
-            for row in films:
+                self.tableWidget.setRowCount(len(films))
+                i = 0
+                for row in films:
 
-                counries = ''
-                for cur in database.getFilmCountries(row[0]):
-                    counries += cur[0] + ', '
+                    counries = ''
+                    for cur in database.getFilmCountries(row[0]):
+                        counries += cur[0] + ', '
 
-                genres = ''
-                for cur in database.getFilmCategories(row[0]):
-                    genres += cur[0] + ', '
+                    genres = ''
+                    for cur in database.getFilmCategories(row[0]):
+                        genres += cur[0] + ', '
 
-                directors = ''
-                for cur in database.getFilmDirectors(row[0]):
-                    directors += cur[0] + ', '
+                    directors = ''
+                    for cur in database.getFilmDirectors(row[0]):
+                        directors += cur[0] + ', '
 
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
-                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
-                i += 1
+                    self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
+                    self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
+                    self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
+                    self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
+                    self.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
+                    self.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
+                    self.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
+                    i += 1
 
-                self.tableWidget.setColumnWidth(0, 5)  # id
-                self.tableWidget.setColumnWidth(1, 265)  # title
-                self.tableWidget.setColumnWidth(2, 5)  # year
-                self.tableWidget.setColumnWidth(3, 133)  # countries
-                self.tableWidget.setColumnWidth(4, 133)  # genres
-                self.tableWidget.setColumnWidth(5, 133)  # directors
-                self.tableWidget.setColumnWidth(6, 10)  # rate
+                    self.tableWidget.setColumnWidth(0, 5)  # id
+                    self.tableWidget.setColumnWidth(1, 250)  # title
+                    self.tableWidget.setColumnWidth(2, 5)  # year
+                    self.tableWidget.setColumnWidth(3, 130)  # countries
+                    self.tableWidget.setColumnWidth(4, 154)  # genres
+                    self.tableWidget.setColumnWidth(5, 130)  # directors
+                    self.tableWidget.setColumnWidth(6, 5)  # rate
 
-        except Exception as ex:
-            QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
-            print(ex)
+            except Exception as ex:
+                QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
+                print(ex)
 
     def addButtonClicked(self):
         add_d = AddDialog(self)
@@ -340,12 +340,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 i += 1
 
             self.tableWidget.setColumnWidth(0, 5)  # id
-            self.tableWidget.setColumnWidth(1, 265)  # title
+            self.tableWidget.setColumnWidth(1, 250)  # title
             self.tableWidget.setColumnWidth(2, 5)  # year
-            self.tableWidget.setColumnWidth(3, 133)  # countries
-            self.tableWidget.setColumnWidth(4, 133)  # genres
-            self.tableWidget.setColumnWidth(5, 133)  # directors
-            self.tableWidget.setColumnWidth(6, 10)  # rate
+            self.tableWidget.setColumnWidth(3, 130)  # countries
+            self.tableWidget.setColumnWidth(4, 154)  # genres
+            self.tableWidget.setColumnWidth(5, 130)  # directors
+            self.tableWidget.setColumnWidth(6, 5)  # rate
 
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')

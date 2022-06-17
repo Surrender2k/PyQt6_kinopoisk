@@ -17,6 +17,8 @@ USE `filmoteka` ;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`film`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`film` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`film` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
@@ -29,6 +31,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`director`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`director` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`director` (
   `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`name`))
@@ -38,6 +42,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`category`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`category` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`category` (
   `name` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`name`))
@@ -47,6 +53,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`country`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`country` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`country` (
   `name` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`name`))
@@ -56,6 +64,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`synonims`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`synonims` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`synonims` (
   `name` VARCHAR(25) NOT NULL,
   `country_name` VARCHAR(25) NOT NULL,
@@ -72,9 +82,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`subscription`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`subscription` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`subscription` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `price` INT UNSIGNED NOT NULL,
   `valid_until` DATE NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -83,6 +94,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`favourites`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`favourites` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`favourites` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `film_id` INT UNSIGNED NOT NULL,
@@ -99,6 +112,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`user`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`user` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`user` (
   `login` VARCHAR(25) NOT NULL,
   `password` VARCHAR(25) NOT NULL,
@@ -123,6 +138,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`film_has_director`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`film_has_director` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`film_has_director` (
   `film_id` INT UNSIGNED NOT NULL,
   `director_name` VARCHAR(255) NOT NULL,
@@ -145,6 +162,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`film_has_category`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`film_has_category` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`film_has_category` (
   `film_id` INT UNSIGNED NOT NULL,
   `category_name` VARCHAR(25) NOT NULL,
@@ -167,6 +186,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `filmoteka`.`film_has_country`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`film_has_country` ;
+
 CREATE TABLE IF NOT EXISTS `filmoteka`.`film_has_country` (
   `film_id` INT UNSIGNED NOT NULL,
   `country_name` VARCHAR(25) NOT NULL,

@@ -36,16 +36,21 @@ class Database:
 		return self.cursor.fetchall()
 
 	def addUser(self, login, password):
-		query = f'INSERT INTO user(login, password) VALUES (\'{login}\', \'{password}\')'
+		query = f'SELECT * FROM user WHERE login = \'{login}\''
 		self.cursor.execute(query)
-		self.db.commit()
+		isUserFound = len(self.cursor.fetchall()) != 0
+		if not isUserFound:
+			query = f'INSERT INTO user(login, password) VALUES (\'{login}\', \'{password}\')'
+			self.cursor.execute(query)
+			self.db.commit()
+		return not isUserFound
 
 	def findUser(self, login, password):
 		query = f'SELECT login FROM user WHERE login = \'{login}\' AND password = \'{password}\''
 		self.cursor.execute(query)
 		return len(self.cursor.fetchall()) != 0
 
-	def addFilm(self, title, year, rate, countries, categories, directors):
+	def addFilm(self, title, year, rate, countries, categories, directors):		
 		query = f'INSERT INTO film(title, year, rate) VALUES (\'{title}\', {year}, {rate})'
 		self.cursor.execute(query)
 		self.db.commit()
@@ -58,7 +63,7 @@ class Database:
 			self.addFilmHasCategory(filmId, categoryName)
 		
 		for directorName in directors:
-			self.addFilmHasDirector(filmId, directorName)
+			self.addFilmHasDirector(filmId, directorName)	
 	
 	def addFilmHasCountry(self, filmId, countryName):
 		# insert new country if not exists
@@ -99,8 +104,15 @@ class Database:
 		self.cursor.execute(query)
 		self.db.commit()
 
-	def removeFilm(self, filmId):
-		pass
+	def deleteFilm(self, filmId):
+		query = f'SELECT * FROM film WHERE id = {filmId}'
+		self.cursor.execute(query)
+		isFound = len(self.cursor.fetchall()) != 0
+		if (isFound):
+			query = f'DELETE FROM film WHERE id = {filmId}'
+			self.cursor.execute(query)
+			self.db.commit()
+		return isFound
 
 	def findAny(self, target):
 		query = f'SELECT id, title, year, rate FROM film WHERE title = \'{target}\' OR year = \'{target}\''
@@ -125,6 +137,12 @@ class Database:
 		query = f'SELECT * FROM user WHERE login = \'{login}\' AND subscription_id IS NOT NULL'
 		self.cursor.execute(query)
 		return len(self.cursor.fetchall()) != 0
+
+	def addSubscription(self, login):
+		pass
+
+	def checkSubscription(self, login):
+		pass
 
 	def close(self):
 		self.db.close()
