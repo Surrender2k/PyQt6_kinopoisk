@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SubDialog</class>
+ <widget class="QDialog" name="SubDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>515</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>515</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>515</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>515</width>
+     <height>300</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>515</width>
+     <height>300</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>515</width>
+     <height>300</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QWidget#widget{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 72, 72, 255), stop:1 rgba(136, 129, 255, 255));
+}
+
+QPushButton{
+	
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 140, 0, 255), stop:1 rgba(0, 212, 255, 255));
+	border: 2px solid #85efff;
+	border-radius: 15px;	
+	color: rgb(255, 255, 255);
+	font-family: roboto;
+	font-size: 16px;
+}
+
+QPushButton:hover{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 255, 115, 255), stop:1 rgba(184, 255, 73, 255));
+	border: 2px solid #90ff94;
+}
+
+QLabel{
+	color: rgb(255, 255, 255);
+}
+
+QLineEdit{
+	border-radius: 15px;
+	font-family: roboto;
+	font-size: 20px;
+}
+</string>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>180</y>
+      <width>181</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Нажмите для продолжения:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buyButton_3">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>210</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>150 рублей (1 месяц</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buyButton_2">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>210</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>600 рублей (6 месяцев) </string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buyButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>210</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1000 руб (1 год)</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="status_label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>441</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roboto</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Статус </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="until_label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>90</y>
+      <width>441</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roboto</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Осталось</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

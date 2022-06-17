@@ -307,8 +307,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sub_d.exec()
 
     def likeButtonClicked(self):
-        favourite_d = FavouriteDialog(self)
-        favourite_d.exec()
+        pass
+        # TODO вывести избранное
+        # UPD: для начала нужен функционал добавления в избранное
 
     def loadDB(self):
         try:
