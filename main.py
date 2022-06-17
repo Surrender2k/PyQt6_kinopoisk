@@ -9,11 +9,9 @@ from add_dialog import Ui_AddDialog
 from delete_dialog import Ui_DeleteDialog
 from sub_dialog import Ui_SubDialog
 from reg_dialog import Ui_RegDialog
+from favourite_dialog import Ui_FavouriteDialog
 
 # pyuic6 -x find_dialog.ui -o find_dialog.py
-
-database = Database()
-
 
 class FindDialog(QDialog, Ui_FindDialog):
     def __init__(self, parent=None):
@@ -26,6 +24,25 @@ class FindDialog(QDialog, Ui_FindDialog):
             self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
+
+
+# pyuic6 -x favourite_dialog.ui -o favourite_dialog.py
+
+class FavouriteDialog(QDialog, Ui_FavouriteDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.addButton.clicked.connect(self.addButtonClicked)
+        self.showButton.clicked.connect(self.showButtonClicked)
+
+    def addButtonClicked(self):
+        if self.favouriteEdit.text() != '':
+            self.close()
+        else:
+            QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
+
+    def showButtonClicked(self):
+            self.close()
 
 
 # pyuic6 -x reg_dialog.ui -o reg_dialog.py
@@ -174,12 +191,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.addButton.hide()
         self.delButton.hide()
-        self.tableWidget.setColumnWidth(0, 133)  # name
-        self.tableWidget.setColumnWidth(1, 133)  # year
-        self.tableWidget.setColumnWidth(2, 133)  # country
-        self.tableWidget.setColumnWidth(3, 133)  # genre
-        self.tableWidget.setColumnWidth(4, 133)  # director
-        self.tableWidget.setColumnWidth(5, 133)  # rate
+        self.tableWidget.setColumnWidth(0, 5)  # rate
+        self.tableWidget.setColumnWidth(1, 128)  # name
+        self.tableWidget.setColumnWidth(2, 120)  # year
+        self.tableWidget.setColumnWidth(3, 133)  # country
+        self.tableWidget.setColumnWidth(4, 133)  # genre
+        self.tableWidget.setColumnWidth(5, 133)  # director
+        self.tableWidget.setColumnWidth(6, 112)  # rate
+        self.tableWidget.verticalHeader().setVisible(False)
+
 
         self.subButton.hide()
         self.outButton.hide()
@@ -245,20 +265,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for cur in database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
 
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(counries[:-2]))  # countries
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(genres[:-2]))  # genres
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
 
-            self.tableWidget.setColumnWidth(0, 275)  # title
-            self.tableWidget.setColumnWidth(1, 5)  # year
-            self.tableWidget.setColumnWidth(2, 133)  # countries
-            self.tableWidget.setColumnWidth(3, 133)  # genres
-            self.tableWidget.setColumnWidth(4, 133)  # directors
-            self.tableWidget.setColumnWidth(5, 10)  # rate
+                self.tableWidget.setColumnWidth(0, 5)  # id
+                self.tableWidget.setColumnWidth(1, 265)  # title
+                self.tableWidget.setColumnWidth(2, 5)  # year
+                self.tableWidget.setColumnWidth(3, 133)  # countries
+                self.tableWidget.setColumnWidth(4, 133)  # genres
+                self.tableWidget.setColumnWidth(5, 133)  # directors
+                self.tableWidget.setColumnWidth(6, 10)  # rate
 
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
@@ -318,7 +340,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 i += 1
 
             self.tableWidget.setColumnWidth(0, 5)  # id
-            self.tableWidget.setColumnWidth(1, 270)  # title
+            self.tableWidget.setColumnWidth(1, 265)  # title
             self.tableWidget.setColumnWidth(2, 5)  # year
             self.tableWidget.setColumnWidth(3, 133)  # countries
             self.tableWidget.setColumnWidth(4, 133)  # genres
@@ -344,6 +366,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     import sys
 
+    database = Database()
     app = QApplication(sys.argv)
     application = MainWindow()
     application.show()
