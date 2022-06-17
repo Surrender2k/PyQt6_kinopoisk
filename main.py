@@ -308,7 +308,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for cur in database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
 
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # id
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
                 self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
                 self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
