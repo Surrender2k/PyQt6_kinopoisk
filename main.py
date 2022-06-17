@@ -308,28 +308,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for cur in database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
 
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(row[1]))  # title
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(row[2])))  # year
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(counries[:-2]))  # countries
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(genres[:-2]))  # genres
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(directors[:-2]))  # directors
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(str(row[3])))  # rate
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(row[0]))  # id
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
 
-            self.tableWidget.setColumnWidth(0, 275)  # title
-            self.tableWidget.setColumnWidth(1, 5)  # year
-            self.tableWidget.setColumnWidth(2, 133)  # countries
-            self.tableWidget.setColumnWidth(3, 133)  # genres
-            self.tableWidget.setColumnWidth(4, 133)  # directors
-            self.tableWidget.setColumnWidth(5, 10)  # rate
+            self.tableWidget.setColumnWidth(0, 5)  # id
+            self.tableWidget.setColumnWidth(1, 270)  # title
+            self.tableWidget.setColumnWidth(2, 5)  # year
+            self.tableWidget.setColumnWidth(3, 133)  # countries
+            self.tableWidget.setColumnWidth(4, 133)  # genres
+            self.tableWidget.setColumnWidth(5, 133)  # directors
+            self.tableWidget.setColumnWidth(6, 10)  # rate
 
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
             print(ex)
 
-    def closeEvent(self, event):
-        # if self.database is not None:
-        #     self.database.close()
+    def closeEvent(self, event):        
         sys.exit()
 
     def outButtonClicked(self):
