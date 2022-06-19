@@ -11,6 +11,7 @@ from sub_dialog import Ui_SubDialog
 from reg_dialog import Ui_RegDialog
 from favourite_dialog import Ui_FavouriteDialog
 
+
 # pyuic6 -x find_dialog.ui -o find_dialog.py
 
 class FindDialog(QDialog, Ui_FindDialog):
@@ -37,12 +38,15 @@ class FavouriteDialog(QDialog, Ui_FavouriteDialog):
 
     def addButtonClicked(self):
         if self.favouriteEdit.text() != '':
+            # TODO сделать запрос на добавление в избранное
+            QMessageBox.information(self, "Информация", "Фильм успешно добавился в избранное")
             self.close()
         else:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
     def showButtonClicked(self):
-            self.close()
+        # TODO сделать запрос показать избранные фильмы
+        self.close()
 
 
 # pyuic6 -x reg_dialog.ui -o reg_dialog.py
@@ -96,7 +100,7 @@ class LoginDialog(QDialog, Ui_LoginDialog):
             self.password = self.passEdit.text()
             if self.login == 'admin' and self.password == 'admin':
                 self.is_admin = True
-                self.is_found = True                
+                self.is_found = True
             elif database.findUser(self.login, self.password):
                 self.is_found = True
             else:
@@ -123,8 +127,8 @@ class AddDialog(QDialog, Ui_AddDialog):
                 countries = self.countryEdit.text().split(', ')
                 categories = self.genreEdit.text().split(', ')
                 directors = self.directorEdit.text().split(', ')
-                rate = float(self.ratingEdit.text()) 
-                database.addFilm(title, year, rate, countries, categories, directors)               
+                rate = float(self.ratingEdit.text())
+                database.addFilm(title, year, rate, countries, categories, directors)
                 self.is_added = True
 
             except Exception as ex:
@@ -150,10 +154,11 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
 
     def deleteButtonClicked(self):
         if self.check_fields():
-            try:         
-                filmId = self.deleteEdit.text()       
-                self.is_deleted = database.deleteFilm(filmId)   
-                # TODO: добавить форму "Фильм удалён"             
+            try:
+                filmId = self.deleteEdit.text()
+                self.is_deleted = database.deleteFilm(filmId)
+                # TODO: добавить форму "Фильм удалён" (сделал)
+                QMessageBox.information(self, 'Информация', 'Фильм удален')
             except Exception as ex:
                 QMessageBox.warning(self, 'Ошибка', 'Запись не найдена')
             finally:
@@ -163,6 +168,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
 
     def check_fields(self):
         return not (self.deleteEdit.text() == '')
+
 
 # pyuic6 -x sub_dialog.ui -o sub_dialog.py
 
@@ -299,10 +305,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.loadDB()
 
     def subButtonClicked(self):
-        # TODO Узнать о подписке пользователя 
-        # UPD: узнал, и что дальше?
+        # TODO Узнать о подписке пользователя: есть ли она, и сколько осталось до истечения
         isSubscriber = database.isSubscriber(self.login)
-
         sub_d = SubDialog(login=self.login, password=self.password, parent=self)
         sub_d.exec()
 
@@ -350,7 +354,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
             print(ex)
 
-    def closeEvent(self, event):        
+    def closeEvent(self, event):
         sys.exit()
 
     def outButtonClicked(self):

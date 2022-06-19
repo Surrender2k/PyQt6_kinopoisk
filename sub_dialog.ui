@@ -103,7 +103,7 @@ QLineEdit{
      </rect>
     </property>
     <property name="text">
-     <string>150 рублей (1 месяц</string>
+     <string>150 руб (1 месяц)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="buyButton_2">
@@ -116,7 +116,7 @@ QLineEdit{
      </rect>
     </property>
     <property name="text">
-     <string>600 рублей (6 месяцев) </string>
+     <string>600 руб (6 мес.) </string>
     </property>
    </widget>
    <widget class="QPushButton" name="buyButton">

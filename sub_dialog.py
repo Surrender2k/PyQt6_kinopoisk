@@ -84,8 +84,8 @@ class Ui_SubDialog(object):
         _translate = QtCore.QCoreApplication.translate
         SubDialog.setWindowTitle(_translate("SubDialog", "Dialog"))
         self.label.setText(_translate("SubDialog", "Нажмите для продолжения:"))
-        self.buyButton_3.setText(_translate("SubDialog", "150 рублей (1 месяц"))
-        self.buyButton_2.setText(_translate("SubDialog", "600 рублей (6 месяцев) "))
+        self.buyButton_3.setText(_translate("SubDialog", "150 руб (1 месяц)"))
+        self.buyButton_2.setText(_translate("SubDialog", "600 руб (6 мес.) "))
         self.buyButton.setText(_translate("SubDialog", "1000 руб (1 год)"))
         self.status_label.setText(_translate("SubDialog", "Статус "))
         self.until_label.setText(_translate("SubDialog", "Осталось"))
