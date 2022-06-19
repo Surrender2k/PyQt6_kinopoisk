@@ -34,6 +34,7 @@ class FavouriteDialog(QDialog, Ui_FavouriteDialog):
         super().__init__(parent)
         self.setupUi(self)
         self.login = login
+        self.prt = parent
         self.addButton.clicked.connect(self.addButtonClicked)
         self.showButton.clicked.connect(self.showButtonClicked)
 
@@ -60,7 +61,7 @@ class FavouriteDialog(QDialog, Ui_FavouriteDialog):
                 QMessageBox.information(self, 'Избранное', 'Список избранного пуст')
                 return
 
-            self.tableWidget.setRowCount(len(films))
+            self.prt.tableWidget.setRowCount(len(films))
             i = 0
             for row in films:
 
@@ -76,22 +77,22 @@ class FavouriteDialog(QDialog, Ui_FavouriteDialog):
                 for cur in database.getFilmDirectors(row[0]):
                     directors += cur[0] + ', '
 
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
-                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
+                self.prt.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
+                self.prt.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
+                self.prt.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
+                self.prt.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
+                self.prt.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
+                self.prt.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
+                self.prt.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
                 i += 1
 
-                self.tableWidget.setColumnWidth(0, 5)  # id
-                self.tableWidget.setColumnWidth(1, 250)  # title
-                self.tableWidget.setColumnWidth(2, 5)  # year
-                self.tableWidget.setColumnWidth(3, 130)  # countries
-                self.tableWidget.setColumnWidth(4, 154)  # genres
-                self.tableWidget.setColumnWidth(5, 130)  # directors
-                self.tableWidget.setColumnWidth(6, 5)  # rate
+                self.prt.tableWidget.setColumnWidth(0, 5)  # id
+                self.prt.tableWidget.setColumnWidth(1, 250)  # title
+                self.prt.tableWidget.setColumnWidth(2, 5)  # year
+                self.prt.tableWidget.setColumnWidth(3, 130)  # countries
+                self.prt.tableWidget.setColumnWidth(4, 154)  # genres
+                self.prt.tableWidget.setColumnWidth(5, 130)  # directors
+                self.prt.tableWidget.setColumnWidth(6, 5)  # rate
 
         except Exception as ex:
             QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
@@ -207,8 +208,7 @@ class DeleteDialog(QDialog, Ui_DeleteDialog):
         if self.check_fields():
             try:
                 filmId = self.deleteEdit.text()
-                self.is_deleted = database.deleteFilm(filmId)
-                # TODO: добавить форму "Фильм удалён" (сделал)
+                self.is_deleted = database.deleteFilm(filmId)                
                 QMessageBox.information(self, 'Информация', 'Фильм удален')
             except Exception as ex:
                 QMessageBox.warning(self, 'Ошибка', 'Запись не найдена')
