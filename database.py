@@ -1,4 +1,4 @@
-import mysql.connector
+import mysql.connector, datetime
 
 class Database:
 
@@ -7,7 +7,7 @@ class Database:
 			self.db = mysql.connector.connect(
 				host="localhost",
 				user="root",
-				password="password",
+				password="",
 				database="filmoteka"
 			)
 			self.cursor = self.db.cursor()
@@ -133,16 +133,57 @@ class Database:
 
 		return result
 
-	def isSubscriber(self, login):
+	def isSubscriber(self, login):		
 		query = f'SELECT * FROM user WHERE login = \'{login}\' AND subscription_id IS NOT NULL'
 		self.cursor.execute(query)
-		return len(self.cursor.fetchall()) != 0
+		if len(self.cursor.fetchall()) != 0:
+			days = self.checkSubscription(login)
+			if (days < 1):
+				query = f'SELECT subscription_id FROM user WHERE login = \'{login}\''
+				self.cursor.execute(query)
+				SubId = self.cursor.fetchall()[0][0]
+				query = f'UPDATE user SET subscription_id = NULL WHERE login = \'{login}\''
+				self.cursor.execute(query)
+				self.db.commit()
+				query = f'DELETE FROM subscription WHERE id = {SubId}'
+				self.cursor.execute(query)
+				self.db.commit()
+				return False
+			else:
+				return True
+		else: 
+			return False
 
-	def addSubscription(self, login):
-		pass
+	def addSubscription(self, login, val):
+		query = f'SELECT subscription_id FROM user WHERE login = \'{login}\''
+		self.cursor.execute(query)
+		oldSubId = self.cursor.fetchall()[0][0]
+		
+		if val == 1:
+			validUntil = datetime.date(datetime.date.today().year + 1, datetime.date.today().month, datetime.date.today().day)
+		elif val == 2:
+			validUntil = datetime.date(datetime.date.today().year, datetime.date.today().month + 6, datetime.date.today().day)		
+		elif val == 3:
+			validUntil = datetime.date(datetime.date.today().year, datetime.date.today().month + 1, datetime.date.today().day)
 
-	def checkSubscription(self, login):
-		pass
+		query = f'INSERT INTO subscription(valid_until) VALUES(\'{validUntil}\')'
+		self.cursor.execute(query)
+		self.db.commit()
+		subId = self.cursor.lastrowid
+		query = f'UPDATE user SET subscription_id = {subId} WHERE login = \'{login}\''
+		self.cursor.execute(query)
+
+		if oldSubId != None:
+			query = f'DELETE FROM subscription WHERE id = {oldSubId}'
+			self.cursor.execute(query)
+			self.db.commit()
+
+		self.db.commit()
+
+	def checkSubscription(self, login):		
+		query = f'SELECT valid_until FROM subscription, user WHERE id = subscription_id AND login = \'{login}\''
+		self.cursor.execute(query)
+		return (self.cursor.fetchall()[0][0] - datetime.date.today()).days
 
 	def findFilm(self, filmId):
 		query = f'SELECT * FROM film WHERE id = {filmId}'

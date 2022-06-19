@@ -230,16 +230,27 @@ class SubDialog(QDialog, Ui_SubDialog):
         self.password = password
         self.setupUi(self)
         self.buyButton.clicked.connect(self.buyButtonClicked)
-        self.buyButton_2.clicked.connect(self.buyButtonClicked)
-        self.buyButton_3.clicked.connect(self.buyButtonClicked)
+        self.buyButton_2.clicked.connect(self.buyButton2Clicked)
+        self.buyButton_3.clicked.connect(self.buyButton3Clicked)
         self.hasSubscribtion = False
 
     def buyButtonClicked(self):
         self.hasSubscribtion = True
-        # TODO дать подпиську
-        QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
+        database.addSubscription(self.login, 1)
+        QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы приобрели подписку на год!')
         self.close()
 
+    def buyButton2Clicked(self):
+        self.hasSubscribtion = True
+        database.addSubscription(self.login, 2)
+        QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы приобрели подписку на пол года!')
+        self.close()
+
+    def buyButton3Clicked(self):
+        self.hasSubscribtion = True
+        database.addSubscription(self.login, 3)
+        QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы приобрели подписку на месяц!')
+        self.close()
 
 # pyuic6 -x main_window.ui -o main_window.py
 
@@ -357,14 +368,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if del_d.is_deleted:
             self.loadDB()
 
-    def subButtonClicked(self):
-        # TODO сколько осталось до истечения
+    def subButtonClicked(self):        
         isSubscriber = database.isSubscriber(self.login)
         sub_d = SubDialog(login=self.login, password=self.password, parent=self)
         if isSubscriber:
-            sub_d.status_label.setText('Статус: активна')
+            sub_d.status_label.setText('Статус: активна')                   
+            sub_d.until_label.setText('Закончится через ' + str(database.checkSubscription(self.login)) + ' дней')
         else:
             sub_d.status_label.setText('Статус: не активна')
+            sub_d.until_label.setText('Купите подписку!')         
         sub_d.exec()
 
     def likeButtonClicked(self):        
