@@ -193,7 +193,9 @@ class SubDialog(QDialog, Ui_SubDialog):
 
     def buyButtonClicked(self):
         self.hasSubscribtion = True
+        # TODO дать подпиську
         QMessageBox.information(self, 'Подписка', 'Поздравляем! Вы ТИПО приобрели подписку :)')
+        self.close()
 
 
 # pyuic6 -x main_window.ui -o main_window.py
@@ -313,9 +315,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.loadDB()
 
     def subButtonClicked(self):
-        # TODO Узнать о подписке пользователя: есть ли она, и сколько осталось до истечения
+        # TODO сколько осталось до истечения
         isSubscriber = database.isSubscriber(self.login)
         sub_d = SubDialog(login=self.login, password=self.password, parent=self)
+        if isSubscriber:
+            sub_d.status_label.setText('Статус: активна')
+        else:
+            sub_d.status_label.setText('Статус: не активна')
         sub_d.exec()
 
     def likeButtonClicked(self):        
