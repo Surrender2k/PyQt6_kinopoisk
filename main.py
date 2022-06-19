@@ -53,7 +53,50 @@ class FavouriteDialog(QDialog, Ui_FavouriteDialog):
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
     def showButtonClicked(self):
-        # TODO сделать запрос показать избранные фильмы
+        try:
+            films = database.getFavourites(self.login)
+
+            if (len(films) == 0):
+                QMessageBox.information(self, 'Избранное', 'Список избранного пуст')
+                return
+
+            self.tableWidget.setRowCount(len(films))
+            i = 0
+            for row in films:
+
+                counries = ''
+                for cur in database.getFilmCountries(row[0]):
+                    counries += cur[0] + ', '
+
+                genres = ''
+                for cur in database.getFilmCategories(row[0]):
+                    genres += cur[0] + ', '
+
+                directors = ''
+                for cur in database.getFilmDirectors(row[0]):
+                    directors += cur[0] + ', '
+
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(row[0])))  # id
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(row[1]))  # title
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(row[2])))  # year
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(counries[:-2]))  # countries
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(genres[:-2]))  # genres
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(directors[:-2]))  # directors
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(row[3])))  # rate
+                i += 1
+
+                self.tableWidget.setColumnWidth(0, 5)  # id
+                self.tableWidget.setColumnWidth(1, 250)  # title
+                self.tableWidget.setColumnWidth(2, 5)  # year
+                self.tableWidget.setColumnWidth(3, 130)  # countries
+                self.tableWidget.setColumnWidth(4, 154)  # genres
+                self.tableWidget.setColumnWidth(5, 130)  # directors
+                self.tableWidget.setColumnWidth(6, 5)  # rate
+
+        except Exception as ex:
+            QMessageBox.information(self, 'Ошибка', 'Всё сломалось!')
+            print(ex)
+
         self.close()
 
 
