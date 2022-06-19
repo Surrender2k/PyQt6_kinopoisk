@@ -92,24 +92,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `filmoteka`.`favourites`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `filmoteka`.`favourites` ;
-
-CREATE TABLE IF NOT EXISTS `filmoteka`.`favourites` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `film_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`, `film_id`),
-  INDEX `fk_favourites_film1_idx` (`film_id` ASC) VISIBLE,
-  CONSTRAINT `fk_favourites_film1`
-    FOREIGN KEY (`film_id`)
-    REFERENCES `filmoteka`.`film` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `filmoteka`.`user`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `filmoteka`.`user` ;
@@ -118,18 +100,11 @@ CREATE TABLE IF NOT EXISTS `filmoteka`.`user` (
   `login` VARCHAR(25) NOT NULL,
   `password` VARCHAR(25) NOT NULL,
   `subscription_id` INT UNSIGNED NULL,
-  `favourites_id` INT UNSIGNED NULL,
   PRIMARY KEY (`login`),
   INDEX `fk_user_subscription1_idx` (`subscription_id` ASC) VISIBLE,
-  INDEX `fk_user_favourites1_idx` (`favourites_id` ASC) VISIBLE,
   CONSTRAINT `fk_user_subscription1`
     FOREIGN KEY (`subscription_id`)
     REFERENCES `filmoteka`.`subscription` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_favourites1`
-    FOREIGN KEY (`favourites_id`)
-    REFERENCES `filmoteka`.`favourites` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -202,6 +177,30 @@ CREATE TABLE IF NOT EXISTS `filmoteka`.`film_has_country` (
   CONSTRAINT `fk_film_has_country_country1`
     FOREIGN KEY (`country_name`)
     REFERENCES `filmoteka`.`country` (`name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `filmoteka`.`favourites`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `filmoteka`.`favourites` ;
+
+CREATE TABLE IF NOT EXISTS `filmoteka`.`favourites` (
+  `user_login` VARCHAR(25) NOT NULL,
+  `film_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`user_login`, `film_id`),
+  INDEX `fk_user_has_film_film1_idx` (`film_id` ASC) VISIBLE,
+  INDEX `fk_user_has_film_user1_idx` (`user_login` ASC) VISIBLE,
+  CONSTRAINT `fk_user_has_film_user1`
+    FOREIGN KEY (`user_login`)
+    REFERENCES `filmoteka`.`user` (`login`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_film_film1`
+    FOREIGN KEY (`film_id`)
+    REFERENCES `filmoteka`.`film` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

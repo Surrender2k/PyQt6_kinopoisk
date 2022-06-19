@@ -30,18 +30,26 @@ class FindDialog(QDialog, Ui_FindDialog):
 # pyuic6 -x favourite_dialog.ui -o favourite_dialog.py
 
 class FavouriteDialog(QDialog, Ui_FavouriteDialog):
-    def __init__(self, parent=None):
+    def __init__(self, login, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.login = login
         self.addButton.clicked.connect(self.addButtonClicked)
         self.showButton.clicked.connect(self.showButtonClicked)
 
     def addButtonClicked(self):
-        if self.favouriteEdit.text() != '':
-            # TODO сделать запрос на добавление в избранное
-            QMessageBox.information(self, "Информация", "Фильм успешно добавился в избранное")
-            self.close()
-        else:
+        try:
+            if self.favouriteEdit.text() != '':
+                if database.findFilm(int(self.favouriteEdit.text())):
+                    database.addFavourites(self.login, int(self.favouriteEdit.text()))
+                    QMessageBox.information(self, 'Информация', 'Фильм успешно добавлен в избранное')
+                else:
+                    QMessageBox.information(self, 'Ошибка', 'Id не найден!')                
+                self.close()
+            else:
+                QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
+
+        except Exception as ex:
             QMessageBox.warning(self, 'Ошибка', 'Заполните корректно поля')
 
     def showButtonClicked(self):
@@ -310,8 +318,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sub_d = SubDialog(login=self.login, password=self.password, parent=self)
         sub_d.exec()
 
-    def likeButtonClicked(self):
-        favourite_d = FavouriteDialog(self)
+    def likeButtonClicked(self):        
+        favourite_d = FavouriteDialog(self, self.login)
         favourite_d.exec()
 
     def loadDB(self):
