@@ -30,7 +30,7 @@ class FindDialog(QDialog, Ui_FindDialog):
 # pyuic6 -x favourite_dialog.ui -o favourite_dialog.py
 
 class FavouriteDialog(QDialog, Ui_FavouriteDialog):
-    def __init__(self, login, parent=None):
+    def __init__(self, parent=None, login=''):
         super().__init__(parent)
         self.setupUi(self)
         self.login = login
@@ -319,7 +319,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sub_d.exec()
 
     def likeButtonClicked(self):        
-        favourite_d = FavouriteDialog(self, self.login)
+        favourite_d = FavouriteDialog(parent=self, login=self.login)
         favourite_d.exec()
 
     def loadDB(self):
