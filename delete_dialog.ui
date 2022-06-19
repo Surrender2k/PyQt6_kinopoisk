@@ -84,7 +84,7 @@ QLineEdit{
      </font>
     </property>
     <property name="placeholderText">
-     <string>Название</string>
+     <string>ID</string>
     </property>
    </widget>
    <widget class="QPushButton" name="deleteButton">
