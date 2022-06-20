@@ -65,7 +65,7 @@ class Ui_DeleteDialog(object):
     def retranslateUi(self, DeleteDialog):
         _translate = QtCore.QCoreApplication.translate
         DeleteDialog.setWindowTitle(_translate("DeleteDialog", "Dialog"))
-        self.deleteEdit.setPlaceholderText(_translate("DeleteDialog", "Название"))
+        self.deleteEdit.setPlaceholderText(_translate("DeleteDialog", "ID"))
         self.deleteButton.setText(_translate("DeleteDialog", "Удалить"))
 
 
